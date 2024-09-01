@@ -1,0 +1,26 @@
+
+.homePage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background: #16325B;
+  box-sizing: border-box;
+
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    color: whitesmoke;
+  }
+  
+}
+.contentBodyContent {
+
+  .contentBodyCard {
+    border-radius: 10px;
+    background: #1be997;
+    padding: 1em;
+    margin: 1em;
+  }
+}

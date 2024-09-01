@@ -1,0 +1,68 @@
+$backgroundColor: rgba(80, 204, 204, 0.307);
+$backgroundColor: #5a5a5a;
+$backgroundColor: #5a5a5acc;
+
+$primary-color: #19344686;
+
+.headerContent {
+  position: absolute;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+
+  top: 0;
+  pointer-events: none;
+
+  box-sizing: border-box;
+
+  .headerRelativeContent {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    .headerStickyContent {
+      position: sticky;
+      display: flex;
+      top: 0;
+      height: fit-content;
+      width: 100%;
+      flex-direction: row;
+
+      .floatingButtonBox:nth-child(1) {
+        display: flex;
+        margin-left: 5%;
+      }
+
+      .navOptions { // ul
+        display: flex;
+        position: relative;
+        list-style: none;
+        margin: 0 2em 0 10%;
+        padding: 0;
+        pointer-events: all;
+        margin-left: auto;
+
+        li {
+          margin-left: 20px;
+      
+          a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+      
+            &:hover {
+              color: lighten($primary-color, 20%);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// Use 
+// pointer-events: all; // Permite seleccionar texto detras de otro elemento, como este
+
+// Use
+// user-select: none; // Impide al usuario seleccionar el texto
