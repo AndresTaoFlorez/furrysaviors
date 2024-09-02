@@ -5,6 +5,8 @@ function useWidth(ref) {
   const resizeObserver = useRef(null);
 
   useEffect(() => {
+    if (!ref.current) return;
+
     resizeObserver.current = new ResizeObserver((entries) => {
       for (let entry of entries) {
         if (entry.target === ref.current) {
@@ -13,22 +15,16 @@ function useWidth(ref) {
       }
     });
 
-    if (ref.current) {
-      resizeObserver.current.observe(ref.current);
-    }
+    resizeObserver.current.observe(ref.current);
 
-    const newRef = ref.current
     return () => {
-      if (resizeObserver.current && newRef) {
-        resizeObserver.current.unobserve(newRef);
+      if (resizeObserver.current && ref.current) {
+        resizeObserver.current.unobserve(ref.current);
       }
     };
-  }, [ref]);
+  }, [ref.current]);
 
   return width;
 }
 
 export default useWidth;
-
-
-

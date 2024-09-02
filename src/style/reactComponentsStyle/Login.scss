@@ -1,0 +1,135 @@
+$backgroundColor: #2f99b9ad;
+$backgroundColor: #17153b7c;
+
+$menu-btn-size: 1.5em;
+
+// --- button config
+$buttonWidth: fit-content;
+$buttonHeight: fit-content;
+
+.Login {
+  display: flex;
+  color: white;
+  width: $buttonWidth;
+  height: $buttonHeight;
+  background: #0F67B1;
+  border-radius: 0 0 10px 10px;
+  align-items: center;
+  transition: all 100ms ease-in-out;
+  pointer-events: all;
+
+
+  div {
+    user-select: none;
+    pointer-events: none;
+  }
+  .loginImage {
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: all;
+    user-select: none;
+
+  img {
+    pointer-events: none;
+    margin: 4px;
+      height: 50px;
+    }
+  }
+
+  .littleLogin {
+    pointer-events: all;
+    user-select: all;
+    overflow: hidden;
+    width: $buttonWidth;
+    height: var(--littleLoginHeight);
+    transition: all 200ms ease-in-out;
+
+    .login-container {       
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      h1 {
+        margin: 5px;
+      }
+
+      label {
+        align-self: baseline;
+      }
+
+      input {
+        display: flex;
+        font-size: 18px;
+        padding: 5px 10px;
+        width: $buttonWidth;
+        padding-left: 35px;
+        outline: none;
+        background: #FFFFFF;
+        color: #000000;
+        border: 1px solid #C4D1EB;
+        border-radius: 5px;
+        box-shadow: 3px 3px 2px 0px #E2E2E2;
+        transition: .3s ease;
+        pointer-events: all;
+        user-select: all;
+      }
+
+      button {
+        display: flex;
+        margin-top: 10px;
+        color: #14396A !important;
+        border: none;
+        font-size: 0.9em;
+        padding: 8px 20px;
+        border-radius: 10px;
+        background: #63B8EE;
+        background: linear-gradient(to top, #63B8EE, #468CCF);
+        pointer-events: all;
+        box-shadow: 0px 0px 1px rgba(39, 39, 39, 0.3);
+        &:hover {
+          cursor: pointer;
+          background: linear-gradient(to top, #468CCF, #63B8EE);
+        }
+      }
+    }
+  }
+
+  .littleLogin_animation {
+    overflow: hidden;
+    // transition: all 200ms ease;
+    transition: all 200ms cubic-bezier(0.51,-0.28, 0.25, 1);
+    animation: open 100ms cubic-bezier(0.51,-0.28, 0.25, 1);
+  }
+  .littleLogin_animation_out {
+    overflow: hidden;
+    transition: all 200ms cubic-bezier(0.51,-0.28, 0.25, 1);
+    animation: outing 1000ms cubic-bezier(0.51,-0.28, 0.25, 1);
+  }
+
+  @keyframes open {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--littleLoginHeight);
+    }
+  }
+  @keyframes outing {
+    0% {
+      width: var(--littleLoginHeight);
+    }
+    100% {
+      width: 0;
+    }
+  }
+}
+
+.growingFloatingButton { // when hover on <Button>
+  // height: calc($buttonHeight + ($buttonHeight * 0.35));
+  width: calc($buttonWidth + 2px);
+  background: #3a70fb;
+  cursor: pointer;
+}

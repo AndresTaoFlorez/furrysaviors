@@ -35,12 +35,9 @@ $primary-color: #19344686;
 
       .navOptions { // ul
         display: flex;
-        position: relative;
-        list-style: none;
-        margin: 0 2em 0 10%;
         padding: 0;
+        margin: 0 var(--marginRight) 0 auto;
         pointer-events: all;
-        margin-left: auto;
 
         li {
           margin-left: 20px;
@@ -55,6 +52,12 @@ $primary-color: #19344686;
             }
           }
         }
+      }
+
+      .loginComponent {
+        position: absolute;
+        right: 60px; /* Se alinea al lado derecho del contenedor */
+        top: 0;
       }
     }
   }

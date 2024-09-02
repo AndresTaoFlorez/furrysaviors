@@ -6,19 +6,28 @@ export default function ContentBody() {
   const [results, setResults] = useState([])
 
   useEffect(() => {
-    fetch('https://hipsum.co/api/?type=hipster-centric&paragraphs=10')
+    fetch('https://hipsum.co/api/?type=hipster-centric&paragraphs=2')
       .then(response => response.json())
       .then(data => setResults(data));
   }, [])
 
   return (<>
     <div className="homePage">
-      <h2>Navbar Options width: {generalWidth.navOptionsRef}</h2>
+      {/* <h2>Navbar Options width: {generalWidth.navOptionsRef}</h2>
+      <h2>Navbar Options between divided into two: {generalWidth.navOptionsRef/2}</h2>
       <h2>Navbar MenuButton width: {generalWidth.floatingButtonRef}</h2>
+      <h2>Sum between Options and MenuButton : {generalWidth.floatingButtonRef+generalWidth.navOptionsRef}</h2>
+
       <h2>Navbar headerContent width: {generalWidth.headerContentRef}</h2>
-      <h2>Broken: {String(generalWidth.broke)}</h2>
+      <h2>Navbar headerContent divided into two: {generalWidth.headerContentRef/2}</h2>
+      <h2>Broken: {String(generalWidth.broke)}</h2> */}
+      <div className="mainTitle">
+        <h1>Furry Saviors</h1>
+        <p>{results[1]}</p>
       </div>
+    </div>
     <div className="contentBodyContent">
+      <h1>ContentBody</h1>
       {results.map((result, index) => (
         <div className="contentBodyCard" key={index}>
           <h1>Title</h1>
@@ -26,6 +35,5 @@ export default function ContentBody() {
         </div>
       ))}
     </div>
-    <h1>ContentBody</h1>
   </>)
 }

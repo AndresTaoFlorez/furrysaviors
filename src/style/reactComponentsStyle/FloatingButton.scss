@@ -1,4 +1,4 @@
-$backgroundColor: rgba(38, 90, 90, 0.307);
+$backgroundColor: #285ad89c;
 
 $menu-btn-size: 30px;
 
@@ -7,8 +7,7 @@ $buttonWidth: 60px;
 $buttonHeight: 67px;
 .floatingButton { // <Button>
   display: flex;
-  border: 2px solid  $backgroundColor;
-  background: #285ad8;
+  background: $backgroundColor;
   width: $buttonWidth;
   height: $buttonHeight;
   pointer-events: all;

@@ -4,23 +4,45 @@
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  background: #16325B;
-  box-sizing: border-box;
-
+  // background-image: 
+  //   linear-gradient(#10466efd, #04070af3), url(https://media.giphy.com/media/KZFrf9JusXzmpnPsT6/giphy.gif?cid=790b7611u9aq5oainzo5ovke5ydr4w0ac8yego30ej0ou49o&ep=v1_gifs_search&rid=giphy.gif&ct=g); /* Imagen de fondo */
+  background-image: linear-gradient(#10466efd, #04070af3);
   justify-content: center;
   align-items: center;
-
-  h2 {
-    color: whitesmoke;
+  
+  .mainTitle {
+    max-width: 500px;
+    justify-content: center;
+    text-align: center;
+    h1 {
+      font-size: 4em;
+      color: #3FA2F6;
+    }
+    p {
+      font-size: 1em;
+      color: #3FA2F6;
+      text-align: justify;
+    }
   }
   
 }
 .contentBodyContent {
+  background: #227B94;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 
   .contentBodyCard {
     border-radius: 10px;
     background: #1be997;
     padding: 1em;
     margin: 1em;
+    max-width: 400px;
+  }
+  h1 {
+    width: 100%;
+    text-align: center;
+    color: #E1D7B7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 }

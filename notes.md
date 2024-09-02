@@ -6,6 +6,9 @@
 background-body
 #36a0cd;
 
+page of free SVG
+https://www.svgrepo.com/svg/525592/user
+
 --------- TENER EN CUENTA ----------
 
 - Los nombres de los componentes deben iniciar con letra mayuscula

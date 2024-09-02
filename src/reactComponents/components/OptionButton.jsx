@@ -7,7 +7,6 @@ export function OptionButton(props) {
   const onMouseHoverOut = async () => {
     setTimeout(() => {
       setIsHovered(false)
-      console.log('Mouse left the button')
     }, 20)
   }
 
@@ -21,4 +20,11 @@ export function OptionButton(props) {
     </div>
   )
 }
+
+// setGeneralWidth({
+//   navOptionsRef: navOptionsRef_width,
+//   floatingButtonRef: floatingButtonRef_width,
+//   headerContentRef: headerContentRef_width,
+//   broke
+// });
 

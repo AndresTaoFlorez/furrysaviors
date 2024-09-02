@@ -8,8 +8,8 @@ export default function App() {
   return (<>
     <div className="App">
       <NavbarProvider>
-        <Navbar></Navbar>
-        <ContentBody></ContentBody>
+        <Navbar/>
+        <ContentBody/>
       </NavbarProvider>
       <Footer></Footer>
     </div>

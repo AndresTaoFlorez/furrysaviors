@@ -8,7 +8,6 @@ export function FloatingButton(props) {
   const onMouseHoverOut = async () => {
     setTimeout(() => {
       setIsHovered(false)
-      console.log('Mouse left the button')
     }, 20)
   }
 
