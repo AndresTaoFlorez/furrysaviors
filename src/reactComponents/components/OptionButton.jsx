@@ -4,16 +4,16 @@ import '../../style/reactComponentsStyle/OptionButton.scss'
 export function OptionButton(props) {
   const [isHovered, setIsHovered] = useState(false)
 
-  const onMouseHoverOut = async () => {
-    setTimeout(() => {
-      setIsHovered(false)
-    }, 20)
-  }
+  const onMouseHoverOut = (callback, delay) => {
+    console.log('onMouseDelay');
+
+    setTimeout(callback, delay);
+  };
 
   return (
     <div className={`${isHovered ? 'growingOptionButton' : 'defaultButton'} buttonOptionComponent`}
-      onMouseOver={async () => setIsHovered(true)}
-      onMouseOut={onMouseHoverOut}>
+      onMouseOver={() => setIsHovered(true)}
+      onMouseOut={() => onMouseHoverOut(setIsHovered(false), 20)}>
       <div className='button'>
         {props.description}
       </div>

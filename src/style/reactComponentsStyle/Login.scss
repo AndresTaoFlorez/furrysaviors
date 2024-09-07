@@ -7,6 +7,7 @@ $menu-btn-size: 1.5em;
 $buttonWidth: fit-content;
 $buttonHeight: fit-content;
 
+
 .Login {
   display: flex;
   color: white;
@@ -17,7 +18,6 @@ $buttonHeight: fit-content;
   align-items: center;
   transition: all 100ms ease-in-out;
   pointer-events: all;
-
 
   div {
     user-select: none;
@@ -38,12 +38,18 @@ $buttonHeight: fit-content;
   }
 
   .littleLogin {
+    position: absolute;
+    top: 0;
     pointer-events: all;
     user-select: all;
     overflow: hidden;
     width: $buttonWidth;
-    height: var(--littleLoginHeight);
-    transition: all 200ms ease-in-out;
+    height: 0;
+    background: #3a70fb;
+    border-radius:0 0 10px 10px ;
+    transition: all 1000ms ease;
+    right: 1%;
+   
 
     .login-container {       
       padding: 10px 20px;
@@ -61,20 +67,22 @@ $buttonHeight: fit-content;
       }
 
       input {
-        display: flex;
-        font-size: 18px;
-        padding: 5px 10px;
-        width: $buttonWidth;
-        padding-left: 35px;
-        outline: none;
-        background: #FFFFFF;
-        color: #000000;
-        border: 1px solid #C4D1EB;
-        border-radius: 5px;
-        box-shadow: 3px 3px 2px 0px #E2E2E2;
-        transition: .3s ease;
-        pointer-events: all;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background: #e8e8e8;
+        box-shadow: 20px 20px 60px #c5c5c5;
+        transition: 0.3s;
         user-select: all;
+        pointer-events: all;
+
+        &:focus {
+          outline-color: #e8e8e8;
+          background: #e8e8e8;
+          box-shadow: inset 20px 20px 60px #c5c5c5,
+             inset -20px -20px 60px #ffffff;
+          transition: 0.3s;
+         }
       }
 
       button {
@@ -99,14 +107,15 @@ $buttonHeight: fit-content;
 
   .littleLogin_animation {
     overflow: hidden;
-    // transition: all 200ms ease;
-    transition: all 200ms cubic-bezier(0.51,-0.28, 0.25, 1);
-    animation: open 100ms cubic-bezier(0.51,-0.28, 0.25, 1);
+    height: var(--littleLoginHeight);
+    transition: all var(--loginAnimationDuration) ease;
+    animation: open var(--loginAnimationDuration) cubic-bezier(0.51,-0.28, 0.25, 1);
   }
   .littleLogin_animation_out {
     overflow: hidden;
-    transition: all 200ms cubic-bezier(0.51,-0.28, 0.25, 1);
-    animation: outing 1000ms cubic-bezier(0.51,-0.28, 0.25, 1);
+    height: 0px;
+    transition: all var(--loginAnimationDuration) ease;
+    animation: open cubic-bezier(0.51,-0.28, 0.25, 1) reverse;
   }
 
   @keyframes open {
@@ -117,19 +126,21 @@ $buttonHeight: fit-content;
       height: var(--littleLoginHeight);
     }
   }
-  @keyframes outing {
-    0% {
-      width: var(--littleLoginHeight);
-    }
-    100% {
-      width: 0;
-    }
-  }
 }
 
-.growingFloatingButton { // when hover on <Button>
-  // height: calc($buttonHeight + ($buttonHeight * 0.35));
-  width: calc($buttonWidth + 2px);
+.growingLogin { // when hover on <Button>
+  height: calc(var(--loginButtonRef_height) + 2px);
+  width: calc(var(--loginButtonRef_width) + 4px);
+  // height:var(--loginButtonRef_height);
+  // width: var(--loginButtonRef_width);
   background: #3a70fb;
   cursor: pointer;
+  justify-content: center;
+}
+
+.block { // Componte de relleno atrás del littleLogin en Absolute
+  display: flex;
+  position: relative;
+  height: var(--loginButtonRef_height);
+  width: var(--loginButtonRef_width);
 }

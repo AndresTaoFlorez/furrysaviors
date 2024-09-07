@@ -3,99 +3,103 @@ import { useRef, useContext, useEffect, useState } from 'react'
 
 import { NavbarContext } from '../context/NavbarContext'
 
-import { FloatingButton } from '../components/FloatingButton'
+import { MenuButton } from '../components/MenuButton'
 import { OptionButton } from '../components/OptionButton'
 import { SearchButton } from '../components/SearchButton'
 import { Login } from '../components/Login'
 
 import useWidth from '../customHooks/useWidth'
-import useInitialWidth from '../customHooks/useInicialWidth'
+import useInitialWidth from '../customHooks/useInitialWidth'
 export default function Header() {
   const navOptionsRef = useRef(null);
-  const floatingButtonRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const headerContentRef = useRef(null);
+  const loginComponentRef = useRef(null);
 
   const { generalWidth, setGeneralWidth } = useContext(NavbarContext)
 
-  const navOptionsRef_width = useWidth(navOptionsRef)
-  const floatingButtonRef_width = useWidth(floatingButtonRef)
+  // const navOptionsRef_width = useWidth(navOptionsRef)
+  // const menuButtonRef_width = useWidth(menuButtonRef)
   const headerContentRef_width = useWidth(headerContentRef)
 
   const [initialWidth, setInitialWidth] = useState({ // Initial width of some refered elements
     navOptionsRef_initialWidth: 0,
-    floatingButtonRef_initialWidth: 0
+    menuButtonRef_initialWidth: 0
   })
 
-  const broke = ((((Number(initialWidth.floatingButtonRef_initialWidth) || 0) + (Number(initialWidth.navOptionsRef_initialWidth) || 0) + 33) < (Number(headerContentRef_width) || 0))) ? true : false
+  useEffect(() => {
+    console.log(initialWidth);
+  }, [initialWidth])
 
   // Guardar los anchos iniciales de algunos elementos referenciados
   useInitialWidth(navOptionsRef, (width) => setInitialWidth({
     ...initialWidth,
     navOptionsRef_initialWidth: width
   }));
-  useInitialWidth(floatingButtonRef, (width) => setInitialWidth({
+  useInitialWidth(menuButtonRef, (width) => setInitialWidth({
     ...initialWidth,
-    floatingButtonRef_initialWidth: width
+    menuButtonRef_initialWidth: width
   }));
   useInitialWidth(headerContentRef, (width) => setInitialWidth({
     ...initialWidth,
     headerContentRef_initialWidth: width
   }));
- 
+  useInitialWidth(loginComponentRef, (width) => setInitialWidth({
+    ...initialWidth,
+    loginComponentRef_initialWidth: width
+  }));
+
 
   // Calcular margin derecho del navbar options
-  const [calculate, setCalculate] = useState('')
+  // const [calculate, setCalculate] = useState('')
 
-  useEffect(() => {
-    // setCalculate((generalWidth.floatingButtonRef_initialWidth/2) - (initialWidth.navOptionsRef_initialWidth/2))
-    const newcalculate = `${((Number(generalWidth.headerContentRef) / 2) || 0) - ((Number(generalWidth.navOptionsRef) / 2) || 0)}px`
-
-    setCalculate(newcalculate)
-
-    // console.log(`${generalWidth.headerContentRef/2} - ${generalWidth.navOptionsRef/2} - ${generalWidth.loginComponentRef} = ${newcalculate}`);
-
-
-  }, [generalWidth])
 
   useEffect(() => {
 
-    setGeneralWidth({
-      navOptionsRef: navOptionsRef_width,
-      floatingButtonRef: floatingButtonRef_width,
-      headerContentRef: headerContentRef_width,
-      broke
-    });
+    const brokeTwo =
+    (Number(initialWidth.menuButtonRef_initialWidth) || 0) +
+    (Number(initialWidth.navOptionsRef_initialWidth) || 0) +
+    (Number(initialWidth.loginComponentRef_initialWidth) || 0) + 84;
+    const brokeThree = headerContentRef_width - brokeTwo
+    
+    const broke = brokeThree <= 0 ? false : true
+    setGeneralWidth({ broke })
 
+    setGeneralWidth(e=>({...e, headerContentRef_width}))
+
+    // console.log(`brokeOne: ${brokeOne} - brokeTwo: ${brokeTwo} = ${brokeThree}`);
   }, [
     headerContentRef_width,
-    setGeneralWidth,
-    navOptionsRef_width,
-    floatingButtonRef_width,
-    broke
+    initialWidth,
   ]);
 
   return (<>
     <div className="headerContent" ref={headerContentRef}> {/* Absolute */}
-      <div className='headerRelativeContent'> {/* Relative */}
-        <nav className='headerStickyContent'>
-          <div className="floatingButtonBox" ref={floatingButtonRef}>
-            <FloatingButton description="☰"></FloatingButton>
-          </div>
-          {broke &&
-            <ul className="navOptions" ref={navOptionsRef}
-              style={{ '--marginRight': `${calculate}` }}>
-              <OptionButton description="option 1"></OptionButton>
-              <OptionButton description="option 2"></OptionButton>
-              <SearchButton description="🔍" id="searchButton"></SearchButton>
-              <OptionButton description="option 3"></OptionButton>
-              <OptionButton description="option 4"></OptionButton>
-            </ul>
-          }
-          <div className="loginComponent">
-            <Login></Login>
-          </div>
-        </nav>
-      </div>
+      {
+        headerContentRef.current &&
+        <div className='headerRelativeContent'> {/* Relative */}
+          <nav className='headerStickyContent'>
+            <div className="menuButtonBox" ref={menuButtonRef}> {/* element 1 ---------- */}
+              <MenuButton description="☰"></MenuButton>
+            </div>
+            {generalWidth.broke &&
+              <ul className="navOptions" ref={navOptionsRef} // element 2 ----------
+              // style={{ '--marginRight': `${calculate}` }}
+              >
+                <OptionButton description="option 1"></OptionButton>
+                <OptionButton description="option 2"></OptionButton>
+                <SearchButton description="🔍" id="searchButton"></SearchButton>
+                <OptionButton description="option 3"></OptionButton>
+                <OptionButton description="option 4"></OptionButton>
+              </ul>
+            }
+            <div className="loginComponent" ref={loginComponentRef}>
+              {/* element 3 ---------- */}
+              <Login />
+            </div>
+          </nav>
+        </div>
+      }
     </div>
   </>)
 }

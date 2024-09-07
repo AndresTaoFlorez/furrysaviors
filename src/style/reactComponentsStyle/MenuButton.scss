@@ -1,11 +1,11 @@
-$backgroundColor: #285ad89c;
+$backgroundColor: #3FA2F6;
 
 $menu-btn-size: 30px;
 
 // --- button config
 $buttonWidth: 60px;
 $buttonHeight: 67px;
-.floatingButton { // <Button>
+.menuButton { // <Button>
   display: flex;
   background: $backgroundColor;
   width: $buttonWidth;
@@ -29,8 +29,8 @@ $buttonHeight: 67px;
 }
 }
 
-.growingFloatingButton { // when hover on <Button>
-  height: calc($buttonHeight + ($buttonHeight * 0.35));
+.growingMenuButton { // when hover on <Button>
+  height: calc($buttonHeight + ($buttonHeight * 0.05));
   width: calc($buttonWidth + 2px);
   background: #3a70fb;
   border-radius: 0 0 5px 5px;

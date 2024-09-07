@@ -2,7 +2,7 @@ $backgroundColor: rgba(80, 204, 204, 0.307);
 $backgroundColor: #5a5a5a;
 $backgroundColor: #5a5a5acc;
 
-$primary-color: #19344686;
+$primary-color: #19344638;
 
 .headerContent {
   position: absolute;
@@ -20,23 +20,27 @@ $primary-color: #19344686;
     width: 100%;
     height: 100vh;
 
-    .headerStickyContent {
+    .headerStickyContent { // sticky content
       position: sticky;
       display: flex;
       top: 0;
       height: fit-content;
       width: 100%;
       flex-direction: row;
+      justify-content: space-around;
+
 
       .floatingButtonBox:nth-child(1) {
         display: flex;
-        margin-left: 5%;
+        // margin-left: 5%;
       }
 
       .navOptions { // ul
         display: flex;
         padding: 0;
-        margin: 0 var(--marginRight) 0 auto;
+        // margin: 0 var(--marginRight) 0 auto;
+        // margin: 0 auto 0 auto;
+        margin-top: 0;
         pointer-events: all;
 
         li {
@@ -55,9 +59,18 @@ $primary-color: #19344686;
       }
 
       .loginComponent {
-        position: absolute;
-        right: 60px; /* Se alinea al lado derecho del contenedor */
+        display: flex;
+        // position: absolute;
+        // right: 4%; /* Se alinea al lado derecho del contenedor */
         top: 0;
+      }
+      & > div:nth-child(1) {
+        margin-left: 1%;
+        margin-right: 0.5%;
+      }
+      & > div:nth-last-child(1) {
+        margin-left: 0.5%;
+        margin-right: 1%;
       }
     }
   }

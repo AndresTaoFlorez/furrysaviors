@@ -19,11 +19,11 @@ export default function ContentBody() {
       <h2>Sum between Options and MenuButton : {generalWidth.floatingButtonRef+generalWidth.navOptionsRef}</h2>
 
       <h2>Navbar headerContent width: {generalWidth.headerContentRef}</h2>
-      <h2>Navbar headerContent divided into two: {generalWidth.headerContentRef/2}</h2>
-      <h2>Broken: {String(generalWidth.broke)}</h2> */}
+      <h2>Navbar headerContent divided into two: {generalWidth.headerContentRef/2}</h2> 
+      <h1 style={{'color': 'white'}}>Broken: {String(generalWidth.broke)}</h1>
+      */}
       <div className="mainTitle">
         <h1>Furry Saviors</h1>
-        <p>{results[1]}</p>
       </div>
     </div>
     <div className="contentBodyContent">

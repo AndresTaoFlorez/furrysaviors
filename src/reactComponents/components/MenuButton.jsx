@@ -1,7 +1,7 @@
 import { useState } from "react"
-import '../../style/reactComponentsStyle/FloatingButton.scss'
+import '../../style/reactComponentsStyle/MenuButton.scss'
 
-export function FloatingButton(props) {
+export function MenuButton(props) {
   const description = props.description
   const [isHovered, setIsHovered] = useState(false)
 
@@ -12,7 +12,7 @@ export function FloatingButton(props) {
   }
 
   return (
-    <div className={`${isHovered ? 'growingFloatingButton' : 'defaultButton'} floatingButton`}
+    <div className={`${isHovered ? 'growingMenuButton' : 'defaultButton'} menuButton`}
       onMouseOver={async () => setIsHovered(true) }
       onMouseOut={onMouseHoverOut}>
       <div className='button'>
