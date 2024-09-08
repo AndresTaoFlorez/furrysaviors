@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 const useInitialWidth = (elementRef, callback) => {
   const initialWidthRef = useRef(null);
+  const maxWidthRef = useRef(0);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
@@ -29,7 +30,7 @@ const useInitialWidth = (elementRef, callback) => {
     };
   }, [elementRef, callback]);
 
-  return initialWidthRef.current;
+  return Number(initialWidthRef.current) || 0;
 };
 
 export default useInitialWidth;

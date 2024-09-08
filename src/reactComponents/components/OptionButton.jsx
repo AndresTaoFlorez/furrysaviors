@@ -1,7 +1,8 @@
 import { useState } from "react"
+import { Link } from 'react-router-dom'
 import '../../style/reactComponentsStyle/OptionButton.scss'
 // importar contexto
-export function OptionButton(props) {
+export function OptionButton(props, onClick = () => { }) {
   const [isHovered, setIsHovered] = useState(false)
 
   const onMouseHoverOut = (callback, delay) => {
@@ -16,6 +17,8 @@ export function OptionButton(props) {
       onMouseOut={() => onMouseHoverOut(setIsHovered(false), 20)}>
       <div className='button'>
         {props.description}
+        {/* <Link to="/Option1">
+        </Link> */}
       </div>
     </div>
   )

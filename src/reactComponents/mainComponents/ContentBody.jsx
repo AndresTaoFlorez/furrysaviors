@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { NavbarContext } from "../context/NavbarContext"
+import {SearchButton} from "../components/SearchButton"
 import '../../style/mainComponentsStyle/ContentBody.scss'
 export default function ContentBody() {
   const { generalWidth } = useContext(NavbarContext)
@@ -27,6 +28,7 @@ export default function ContentBody() {
       </div>
     </div>
     <div className="contentBodyContent">
+      {/* <SearchButton description="Search"></SearchButton> */}
       <h1>ContentBody</h1>
       {results.map((result, index) => (
         <div className="contentBodyCard" key={index}>

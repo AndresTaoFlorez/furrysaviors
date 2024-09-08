@@ -1,0 +1,50 @@
+
+
+.modalComponent {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  
+  // background-color: brown;
+  transition: all 500ms;
+
+  .modalBackground {
+    position: fixed;
+    pointer-events: all;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    // background-color: #00000062; /* Fondo oscuro */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 500ms;
+    z-index: -1;
+    animation: modalBackground 150ms forwards;
+  }
+  .modalBackgroundOut {
+    @extend .modalBackground;
+    animation: modalBackgroundOut 100ms forwards;
+  }
+
+  @keyframes modalBackground {
+    from {
+      background: transparent; 
+    }
+    to {
+      background-color: #00000062; /* Fondo oscuro */
+    }
+  }
+  @keyframes modalBackgroundOut {
+    0% {
+      background-color: #00000062; /* Fondo oscuro */
+    }
+    100% {
+      background: transparent; 
+
+    }
+  }
+}

@@ -10,6 +10,7 @@ import { Login } from '../components/Login'
 
 import useWidth from '../customHooks/useWidth'
 import useInitialWidth from '../customHooks/useInitialWidth'
+// import Modal from '../components/Modal'
 export default function Header() {
   const navOptionsRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -18,7 +19,7 @@ export default function Header() {
 
   const { generalWidth, setGeneralWidth } = useContext(NavbarContext)
 
-  // const navOptionsRef_width = useWidth(navOptionsRef)
+  const navOptionsRef_width = useWidth(navOptionsRef)
   // const menuButtonRef_width = useWidth(menuButtonRef)
   const headerContentRef_width = useWidth(headerContentRef)
 
@@ -27,27 +28,24 @@ export default function Header() {
     menuButtonRef_initialWidth: 0
   })
 
-  useEffect(() => {
-    console.log(initialWidth);
-  }, [initialWidth])
-
   // Guardar los anchos iniciales de algunos elementos referenciados
-  useInitialWidth(navOptionsRef, (width) => setInitialWidth({
-    ...initialWidth,
-    navOptionsRef_initialWidth: width
-  }));
-  useInitialWidth(menuButtonRef, (width) => setInitialWidth({
-    ...initialWidth,
-    menuButtonRef_initialWidth: width
-  }));
-  useInitialWidth(headerContentRef, (width) => setInitialWidth({
-    ...initialWidth,
+  // useInitialWidth(navOptionsRef, (width) => setInitialWidth(prev => ({
+  //   ...prev,
+  //   navOptionsRef_initialWidth: width
+  // })));
+  useInitialWidth(menuButtonRef, (width) => setInitialWidth(prev => ({
+    ...prev,
+    menuButtonRef_initialWidth: width // Actualiza correctamente preservando los valores anteriores
+  })));
+  useInitialWidth(headerContentRef, (width) => setInitialWidth(prev => ({
+    ...prev,
     headerContentRef_initialWidth: width
-  }));
-  useInitialWidth(loginComponentRef, (width) => setInitialWidth({
-    ...initialWidth,
+  })));
+  useInitialWidth(loginComponentRef, (width) => setInitialWidth(prev => ({
+    ...prev,
     loginComponentRef_initialWidth: width
-  }));
+  })));
+
 
 
   // Calcular margin derecho del navbar options
@@ -56,21 +54,30 @@ export default function Header() {
 
   useEffect(() => {
 
+    setInitialWidth(prev => ({
+      ...prev,
+      navOptionsRef_initialWidth: Number(navOptionsRef_width) || 0
+    }))
+
     const brokeTwo =
-    (Number(initialWidth.menuButtonRef_initialWidth) || 0) +
-    (Number(initialWidth.navOptionsRef_initialWidth) || 0) +
-    (Number(initialWidth.loginComponentRef_initialWidth) || 0) + 84;
-    const brokeThree = headerContentRef_width - brokeTwo
-    
+      initialWidth.menuButtonRef_initialWidth +
+      initialWidth.navOptionsRef_initialWidth +
+      initialWidth.loginComponentRef_initialWidth +
+      (Number(generalWidth.brokeThree) || 0)
+
+    const brokeThree = headerContentRef_width - (brokeTwo + 15)
+    setGeneralWidth(e => ({ ...e, brokeThree: (Number(brokeThree) || 0) }));
+
     const broke = brokeThree <= 0 ? false : true
     setGeneralWidth({ broke })
 
-    setGeneralWidth(e=>({...e, headerContentRef_width}))
+    setGeneralWidth(e => ({ ...e, headerContentRef_width }))
 
-    // console.log(`brokeOne: ${brokeOne} - brokeTwo: ${brokeTwo} = ${brokeThree}`);
+    // console.log(`brokeOne: ${headerContentRef_width} - brokeTwo: ${brokeTwo} = ${brokeThree}`)
   }, [
-    headerContentRef_width,
-    initialWidth,
+    navOptionsRef_width,
+    headerContentRef_width
+    // initialWidth
   ]);
 
   return (<>

@@ -2,7 +2,7 @@ import '../../style/reactComponentsStyle/Login.scss'
 import { useState, useEffect, useRef } from "react"
 import useInitialHeight from '../customHooks/useInitialHeight'
 import useInitialWidth from '../customHooks/useInitialWidth'
-// import useWidth from '../customHooks/useWidth'
+import { ModalTest } from '../components/Modal'
 
 export function Login() {
   const [isHovered, setIsHovered] = useState({
@@ -12,20 +12,15 @@ export function Login() {
   })
 
   const [initialSize, setInitialSize] = useState({
-    loginButtonRef_height: 0, 
+    loginButtonRef_height: 0,
     loginButtonRef_width: 0
   })
 
   const loginButtonRef = useRef(null)
 
   // Uso del CustomHook para calcultar el valor estable inicial de la referencia loginButtonRef
-  useInitialHeight(loginButtonRef, (height) => {setInitialSize(e=>({...e, loginButtonRef_height:height}))})
-  useInitialWidth(loginButtonRef, (width) => {setInitialSize(e=>({...e, loginButtonRef_width:width}))})
-
-  // useEffect(()=>{
-  //   console.log(initialSize.loginButtonRef_height);
-  //   console.log(initialSize.loginButtonRef_width);
-  // }, [loginButtonRef.current])
+  useInitialHeight(loginButtonRef, (height) => { setInitialSize(e => ({ ...e, loginButtonRef_height: height })) })
+  useInitialWidth(loginButtonRef, (width) => { setInitialSize(e => ({ ...e, loginButtonRef_width: width })) })
 
   const [clicStatus, setClicStatus] = useState(false)
   const [animation, setAnimation] = useState(null)
@@ -36,7 +31,11 @@ export function Login() {
       littleLoginHover: hoverState,
       focused: hoverState
     }));
+
+    // setModalState(e => ({ ...e, preModalState: true }))
+
   };
+
   const onMouseDelay = async (callback, delay = 1000) => {
     console.log('onMouseDelay');
     setTimeout(callback, delay);
@@ -47,7 +46,7 @@ export function Login() {
       ref={loginButtonRef}
       onMouseOver={() => setIsHovered((prev) => ({ ...prev, LoginHover: true }))}
       onMouseOut={() => setIsHovered((prev) => ({ ...prev, LoginHover: false }))}
-      style={{ '--loginAnimationDuration': '200ms', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px'}}
+      style={{ '--loginAnimationDuration': '200ms', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
     >
       {!clicStatus ? (
         <div className='loginImage'
@@ -61,43 +60,52 @@ export function Login() {
           <img src="../../../public/resources/user-svgrepo-com.svg" alt="hipsum logo" />
         </div>
       ) : (
-        <div >
-          <div className='block'
-          style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
-          ></div>
-          <div
-            style={{ '--littleLoginHeight': '230px', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px' }}
-            className={`littleLogin ${animation ? 'littleLogin_animation' : 'littleLogin_animation_out'}`}
-            onClick={() => {
-              if (!isHovered.focused) {
-                setAnimation(false)
-                onMouseDelay(() => {
-                  setClicStatus(!clicStatus)
-                  setAnimation(true)
-                }, 100)
-              }
-            }}
-          >
-            <div className="login-container" >
-              <h1>Login</h1>
-              <label to="username">Usuario:</label>
-              <input type="text" id="username" name="username" placeholder="Introduce tu usuario"
-                onMouseOver={() => handleHover(true)}
-                onMouseOut={() => handleHover(false)}
-              />
-              <label to="password">Contraseña:</label>
-              <input type="password" id="password" name="password" placeholder="Introduce tu contraseña"
-                onMouseOver={() => handleHover(true)}
-                onMouseOut={() => handleHover(false)}
-              />
-              <button
-                onMouseOver={() => handleHover(true)}
-                onMouseOut={() => handleHover(false)}
-              >Send</button>
+        <>
+
+          <ModalTest modalState={animation} setModalState={(e) => {
+            console.log(e);
+            setAnimation(e)
+            if (!isHovered.focused) {
+              setAnimation(false)
+              onMouseDelay(() => {
+                setClicStatus(!clicStatus)
+                setAnimation(!animation)
+              }, 100)
+            }
+          }}>
+            <div className='block'
+              style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}>
             </div>
-          </div>
-        </div>
+            <div style={{ '--littleLoginHeight': '230px', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
+              className={`littleLogin ${animation ? 'littleLogin_animation' : 'littleLogin_animation_out'}`}
+            >
+              <div className="login-container" >
+                <h1>Login</h1>
+                <label to="username">Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Introduce tu usuario"
+                  onMouseOver={() => handleHover(true)}
+                  onMouseOut={() => handleHover(false)}
+                  onTouchStart={() => handleHover(true)}
+                  onTouchEnd={() => handleHover(true)}
+                />
+                <label to="password">Contraseña:</label>
+                <input type="password" id="password" name="password" placeholder="Introduce tu contraseña"
+                  onMouseOver={() => handleHover(true)}
+                  onMouseOut={() => handleHover(false)}
+                  onTouchStart={() => handleHover(true)}
+                  onTouchEnd={() => handleHover(true)}
+                />
+                <button
+                  onMouseOver={() => handleHover(true)}
+                  onMouseOut={() => handleHover(false)}
+                  onTouchStart={() => handleHover(true)}
+                  onTouchEnd={() => handleHover(true)}
+                >Send</button>
+              </div>
+            </div>
+          </ModalTest>
+        </>
       )}
-    </div>
+    </div >
   </>)
 }

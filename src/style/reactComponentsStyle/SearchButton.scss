@@ -1,1 +1,90 @@
+:root{
+  --searchInputHeight: 0px;
+  --searchButtonIconWidth: 0px;
+}
 
+.searchButton {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  // overflow: hidden;
+  
+  .searchButtonIcon {
+    // animation: openSearchIcon var(--animationDuration) reverse;
+    animation: openSearchIcon 200ms;
+    width: fit-content;
+    height: fit-content;
+    transition: all 500ms;
+  }
+  .searchButtonBar{
+    display: flex;
+    height: 95%;
+    height: 0;
+    justify-content: center;
+    
+
+    input.searchInput {
+      border: none;
+      z-index: 10;
+      padding: 0 1rem;
+      border-radius: 0 0 0.5rem 0.5rem;
+      background-color: #e8e8e8;
+      box-shadow: 0 5px 50px #c5c5c5;
+    }
+  }
+  .searchButtonOpened {
+
+    input.searchInput {
+      animation: openSearchButton var(--animationDuration) forwards;
+
+      &:focus {
+        outline-color: #e8e8e8;
+        margin: 0 2px;
+        box-shadow: 0 5px 50px #c5c5c5a1,
+          inset 0 5px 50px #ffffff;
+        transition: var(--animationDuration);
+
+      }
+    }
+  }
+  .searchButtonOut {
+    transition: all var(--animationDuration) ;
+    animation: closedSearchButton var(--animationDuration);
+  }
+
+  // Animation
+  @keyframes openSearchButton {
+    0% {
+      height: 0;
+      width: 0;
+      width: var(--searchButtonIconWidth);
+    }
+    100% {
+      height: var(--searchInputHeight);
+      width: 200px;
+    }
+  }
+  @keyframes closedSearchButton {
+    0% {
+      // width: 0;
+      width: 200px;
+    }
+    100% {
+      width: var(--searchButtonIconWidth);
+      width: 0;
+    }
+  }
+}
+
+@keyframes openSearchIcon {
+  0% {
+    height: 0;
+    width:  0;
+  }
+  100% {
+    width: var(--searchButtonIconWidth);
+    height: var(--searchButtonIconHeight);
+    // width: 58px;
+    // height: 60px;
+  }
+}

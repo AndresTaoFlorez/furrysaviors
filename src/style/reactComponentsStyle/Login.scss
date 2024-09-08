@@ -48,6 +48,7 @@ $buttonHeight: fit-content;
     background: #3a70fb;
     border-radius:0 0 10px 10px ;
     transition: all 1000ms ease;
+    z-index: 2;
     right: 1%;
    
 
@@ -130,7 +131,7 @@ $buttonHeight: fit-content;
 
 .growingLogin { // when hover on <Button>
   height: calc(var(--loginButtonRef_height) + 2px);
-  width: calc(var(--loginButtonRef_width) + 4px);
+  width: calc(var(--loginButtonRef_width) + 2px);
   // height:var(--loginButtonRef_height);
   // width: var(--loginButtonRef_width);
   background: #3a70fb;
@@ -141,6 +142,12 @@ $buttonHeight: fit-content;
 .block { // Componte de relleno atrás del littleLogin en Absolute
   display: flex;
   position: relative;
-  height: var(--loginButtonRef_height);
-  width: var(--loginButtonRef_width);
+  height: calc(var(--loginButtonRef_height) + 2px);
+  width: calc(var(--loginButtonRef_width) + 2px);
 }
+
+
+
+// ANIMATIONS 
+
+
