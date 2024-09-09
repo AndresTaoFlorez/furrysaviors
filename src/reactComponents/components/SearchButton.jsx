@@ -1,6 +1,6 @@
 import '../../style/reactComponentsStyle/SearchButton.scss'
 import { OptionButton } from "./OptionButton"
-import Modal, { ModalTest } from './Modal'
+import Modal from './Modal'
 import { useState, useRef, useEffect } from 'react'
 import useInitialHeight from '../customHooks/useInitialHeight'
 import useInitialWidth from '../customHooks/useInitialWidth'
@@ -42,7 +42,7 @@ export function SearchButton(props) {
           <Modal setState={setClickStatus} state={clickStatus} setPreState={setAnimation}>
             <div className={`${!animation ? `searchButtonOpened` : `searchButtonOut`} searchButtonBar`}
               style={{ '--searchInputHeight': initialSize.searchButtonHeight + 'px', '--searchInputWidth': initialSize.searchButtonWidth + 'px', '--animationDuration': '100ms' }}>
-              <input type="text" className="searchInput"
+              <input type="text" className="searchInput" placeholder='Search'
                 onClick={() => { setClickStatus(e => ({ ...e, focused: true })) }}
                 onMouseOver={() => { setClickStatus(e => ({ ...e, focused: true })) }}
                 onMouseOut={() => { setClickStatus(e => ({ ...e, focused: false })) }} />

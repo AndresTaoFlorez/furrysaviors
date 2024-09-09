@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react"
 import { NavbarContext } from "../context/NavbarContext"
-import {SearchButton} from "../components/SearchButton"
 import '../../style/mainComponentsStyle/ContentBody.scss'
 export default function ContentBody() {
   const { generalWidth } = useContext(NavbarContext)
@@ -14,15 +13,10 @@ export default function ContentBody() {
 
   return (<>
     <div className="homePage">
-      {/* <h2>Navbar Options width: {generalWidth.navOptionsRef}</h2>
-      <h2>Navbar Options between divided into two: {generalWidth.navOptionsRef/2}</h2>
-      <h2>Navbar MenuButton width: {generalWidth.floatingButtonRef}</h2>
-      <h2>Sum between Options and MenuButton : {generalWidth.floatingButtonRef+generalWidth.navOptionsRef}</h2>
-
-      <h2>Navbar headerContent width: {generalWidth.headerContentRef}</h2>
-      <h2>Navbar headerContent divided into two: {generalWidth.headerContentRef/2}</h2> 
-      <h1 style={{'color': 'white'}}>Broken: {String(generalWidth.broke)}</h1>
-      */}
+      <div className="testingTitles">
+        {/* <h1>Broken: {String(generalWidth.broke)}</h1> */}
+        <h1>Broken: {generalWidth.optionsElements}</h1>
+      </div>
       <div className="mainTitle">
         <h1>Furry Saviors</h1>
       </div>

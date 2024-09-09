@@ -1,5 +1,6 @@
 
 $backgroundColor: #2f99b9ad;
+$backgroundColor: #3ec0e783;
 $backgroundColor: #3FA2F6;
 
 $menu-btn-size: 1.5em;
@@ -32,7 +33,9 @@ $buttonHeight: fit-content;
     pointer-events: none;
     user-select: none;
     transition: all 100ms ease-in-out;
+
   }
+  
 }
 
 .growingOptionButton { // when hover on <Button>
@@ -41,8 +44,14 @@ $buttonHeight: fit-content;
   background: #3ebfe7;
   border-radius: 0 0 5px 5px;
   cursor: pointer;
+
   .button {
     font-size: calc($menu-btn-size + 2px);
-    color: rgb(69, 68, 68);
+    color: #212121;
+  }
+
+  &:active {
+    scale: 1.02;
+    filter: brightness(0.9);
   }
 }

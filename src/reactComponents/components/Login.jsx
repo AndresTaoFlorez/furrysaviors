@@ -25,86 +25,59 @@ export function Login() {
   const [clicStatus, setClicStatus] = useState(false)
   const [animation, setAnimation] = useState(null)
 
-  const handleHover = (hoverState) => {
-    setIsHovered(prevState => ({
-      ...prevState,
-      littleLoginHover: hoverState,
-      focused: hoverState
-    }));
-
-    // setModalState(e => ({ ...e, preModalState: true }))
-
+  const handleHover = (e) => {
+    setAnimation(e)
+    if (!isHovered.focused) {
+      setAnimation(false)
+      onMouseDelay(() => {
+        setClicStatus(!clicStatus)
+        setAnimation(!e)
+      }, 100)
+    }
   };
 
   const onMouseDelay = async (callback, delay = 1000) => {
-    console.log('onMouseDelay');
+    // console.log('onMouseDelay');
     setTimeout(callback, delay);
   };
 
+  const handleHover0 = (state = Boolean) => {
+    setIsHovered((prev) => ({ ...prev, LoginHover: state }))
+  }
+
   return (<>
-    <div className={`${isHovered.LoginHover ? (!clicStatus && 'growingLogin') : ''} Login`}
-      ref={loginButtonRef}
-      onMouseOver={() => setIsHovered((prev) => ({ ...prev, LoginHover: true }))}
-      onMouseOut={() => setIsHovered((prev) => ({ ...prev, LoginHover: false }))}
-      style={{ '--loginAnimationDuration': '200ms', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
+    <div className="Login"
+
+      onMouseOver={() => handleHover0(true)}
+      onMouseOut={() => handleHover0(false)}
+      style={{ '--loginAnimationDuration': '120ms', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
     >
       {!clicStatus ? (
-        <div className='loginImage'
+        <div className='loginImage' ref={loginButtonRef}
           onMouseOver={() => setIsHovered({ ...isHovered, LoginHover: true })}
           onMouseOut={() => setIsHovered({ ...isHovered, LoginHover: false })}
           onClick={() => {
             setClicStatus(!clicStatus)
-            setIsHovered({ ...isHovered, focused: false })
             setAnimation(true)
-          }}>
+          }}
+        >
           <img src="../../../public/resources/user-svgrepo-com.svg" alt="hipsum logo" />
         </div>
       ) : (
-        <>
-
-          <ModalTest modalState={animation} setModalState={(e) => {
-            console.log(e);
-            setAnimation(e)
-            if (!isHovered.focused) {
-              setAnimation(false)
-              onMouseDelay(() => {
-                setClicStatus(!clicStatus)
-                setAnimation(!animation)
-              }, 100)
-            }
-          }}>
-            <div className='block'
-              style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}>
+        <ModalTest modalState={animation} setModalState={(e) => {handleHover(e)}}>
+          <div className='block' style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}></div>
+          {/* LITTLE LOGIN */}
+          <div className={`littleLogin ${animation ? 'littleLogin_animation' : 'littleLogin_animation_out'}`}>
+            <div className="login-container" >
+              <h1>Login</h1>
+              <label to="username">Usuario:</label>
+              <input type="text" id="username" name="username" placeholder="Introduce tu usuario" />
+              <label to="password">Contraseña:</label>
+              <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" />
+              <button>Send</button>
             </div>
-            <div style={{ '--littleLoginHeight': '230px', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
-              className={`littleLogin ${animation ? 'littleLogin_animation' : 'littleLogin_animation_out'}`}
-            >
-              <div className="login-container" >
-                <h1>Login</h1>
-                <label to="username">Usuario:</label>
-                <input type="text" id="username" name="username" placeholder="Introduce tu usuario"
-                  onMouseOver={() => handleHover(true)}
-                  onMouseOut={() => handleHover(false)}
-                  onTouchStart={() => handleHover(true)}
-                  onTouchEnd={() => handleHover(true)}
-                />
-                <label to="password">Contraseña:</label>
-                <input type="password" id="password" name="password" placeholder="Introduce tu contraseña"
-                  onMouseOver={() => handleHover(true)}
-                  onMouseOut={() => handleHover(false)}
-                  onTouchStart={() => handleHover(true)}
-                  onTouchEnd={() => handleHover(true)}
-                />
-                <button
-                  onMouseOver={() => handleHover(true)}
-                  onMouseOut={() => handleHover(false)}
-                  onTouchStart={() => handleHover(true)}
-                  onTouchEnd={() => handleHover(true)}
-                >Send</button>
-              </div>
-            </div>
-          </ModalTest>
-        </>
+          </div>
+        </ModalTest>
       )}
     </div >
   </>)

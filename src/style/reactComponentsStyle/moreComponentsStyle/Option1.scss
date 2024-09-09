@@ -1,0 +1,34 @@
+
+.option1 {
+  display: flex;
+  flex-direction: column;
+  width: -webkit-fill-available;
+  // background-image: 
+  //   linear-gradient(#10456eb8, #04070aa7), url(https://media.giphy.com/media/KZFrf9JusXzmpnPsT6/giphy.gif?cid=790b7611u9aq5oainzo5ovke5ydr4w0ac8yego30ej0ou49o&ep=v1_gifs_search&rid=giphy.gif&ct=g); /* Imagen de fondo */
+  background-image: linear-gradient(#10466efd, #04070af3);
+  background-size: cover;
+
+  .option1_mainTitle {
+    display: flex;
+    position: relative;
+    width: -webkit-fill-available;
+    height: 100vh;
+    background: #229799;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      color: antiquewhite;
+    }
+  }
+
+  .option1_content {
+    display: flex;
+    width: 100%;
+    p {
+      text-align: center;
+      font-size: 1em;
+      color: rgb(0, 255, 255);
+    }
+  }
+}
