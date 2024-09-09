@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { NavbarContext } from "../context/NavbarContext"
 import '../../style/mainComponentsStyle/ContentBody.scss'
+
 export default function ContentBody() {
   const { generalWidth } = useContext(NavbarContext)
   const [results, setResults] = useState([])
@@ -14,8 +15,8 @@ export default function ContentBody() {
   return (<>
     <div className="homePage">
       <div className="testingTitles">
-        {/* <h1>Broken: {String(generalWidth.broke)}</h1> */}
-        <h1>Broken: {generalWidth.optionsElements}</h1>
+        <h1>Count: {generalWidth.optionsElements}</h1>
+        <h1>Broke: {String(generalWidth.broke)}</h1>
       </div>
       <div className="mainTitle">
         <h1>Furry Saviors</h1>

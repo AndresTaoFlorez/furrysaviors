@@ -19,6 +19,7 @@ export default function Header() {
   const menuButtonRef = useRef(null);
   const headerContentRef = useRef(null);
   const loginComponentRef = useRef(null);
+  const navElementsCount = useRef(null);
 
   const { generalWidth, setGeneralWidth } = useContext(NavbarContext)
 
@@ -45,21 +46,42 @@ export default function Header() {
 
   // ------- counter of elements
   const [optionCount, setOptionCount] = useState(0); // Estado para almacenar el conteo
-  useEffect(()=> {
-    if (navOptionsRef.current) {
-      const optionElements = navOptionsRef.current.querySelectorAll('.option');
+  useEffect(() => {
+    if (navElementsCount.current) {
+      const optionElements = navElementsCount.current.querySelectorAll('.option');
       setOptionCount(Array.from(optionElements).length)
     }
 
-    setGeneralWidth(prev=>({
+    setGeneralWidth(prev => ({
       ...prev,
       optionsElements: Number(optionCount)
     }))
     console.log(optionCount);
-    
-  }, [headerContentRef_width])
 
+  }, [headerContentRef_width, initialWidth]);
   // ------- end --- counter of elements
+
+  // ------- EXPERIMENTO
+
+  // ASD0001:
+  useEffect(() => {
+    if (navElementsCount.current && !generalWidth.broke) {
+      const optionElements = navElementsCount.current.querySelectorAll('.option');
+      const lastElement = optionElements[optionCount - 1]; // Acceder al último elemento
+      console.log('Último elemento:', lastElement);
+      if (lastElement) {
+        lastElement.remove(); // Eliminar el último elemento del DOM
+        console.log('Último elemento eliminado');
+        // setOptionCount(optionElements.length - 1)
+        // Aquí puedes manipular el último elemento si es necesario
+        setOptionCount(optionElements.length - 1);
+      }
+    }
+  }, [generalWidth.broke],[]); // Dependencias actualizadas
+
+
+  // ------- END EXPERIMENTO
+
 
   useEffect(() => {
     // console.log(generalWidth)
@@ -86,7 +108,8 @@ export default function Header() {
     // console.log(`brokeOne: ${headerContentRef_width} - brokeTwo: ${brokeTwo} = ${brokeThree}`)
   }, [
     navOptionsRef_width,
-    headerContentRef_width
+    headerContentRef_width,
+    initialWidth.navOptionsRef_width
   ]);
 
   return (<>
@@ -98,23 +121,25 @@ export default function Header() {
             <div className="menuButtonBox" ref={menuButtonRef}> {/* element 1 ---------- */}
               <MenuButton description="☰"></MenuButton>
             </div>
-            {generalWidth.broke &&
-              <ul className="navOptions" ref={navOptionsRef} // element 2 ----------
-              // style={{ '--marginRight': `${calculate}` }}
-              >
-                <Link className="option" to="/home">
-                  <OptionButton description="home"></OptionButton>
-                </Link>
-                <Link className="option" to={"/option1"}>
-                  <OptionButton description="option 1"></OptionButton>
-                </Link>
-                <SearchButton description="🔍" id="searchButton"></SearchButton>
-                <Link className="option" to="/option2">
-                  <OptionButton description="option 2"></OptionButton>
-                </Link>
-                <OptionButton description="option 3"></OptionButton>
-              </ul>
-            }
+            <div ref={navElementsCount}>
+              {true && // element 2 ----------
+                <ul className="navOptions" ref={navOptionsRef}>
+                  <Link className="option" to="/home">
+                    <OptionButton description="home"></OptionButton>
+                  </Link>
+                  <Link className="option" to={"/option1"}>
+                    <OptionButton description="option 1"></OptionButton>
+                  </Link>
+                  <SearchButton description="🔍" id="searchButton"></SearchButton>
+                  <Link className="option" to="/option2">
+                    <OptionButton description="option 2"></OptionButton>
+                  </Link>
+                  <Link className="option" to={"option3"}>
+                    <OptionButton description="option 3"></OptionButton>
+                  </Link>
+                </ul>
+              }
+            </div>
             <div className="loginComponent" ref={loginComponentRef}>
               {/* element 3 ---------- */}
               <Login />
