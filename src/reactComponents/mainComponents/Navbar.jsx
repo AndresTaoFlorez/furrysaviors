@@ -56,7 +56,7 @@ export default function Header() {
       ...prev,
       optionsElements: Number(optionCount)
     }))
-    console.log(optionCount);
+    // console.log(optionCount);
 
   }, [headerContentRef_width, initialWidth]);
   // ------- end --- counter of elements
@@ -68,10 +68,10 @@ export default function Header() {
     if (navElementsCount.current && !generalWidth.broke) {
       const optionElements = navElementsCount.current.querySelectorAll('.option');
       const lastElement = optionElements[optionCount - 1]; // Acceder al último elemento
-      console.log('Último elemento:', lastElement);
+      // console.log('Último elemento:', lastElement);
       if (lastElement) {
         lastElement.remove(); // Eliminar el último elemento del DOM
-        console.log('Último elemento eliminado');
+        // console.log('Último elemento eliminado');
         // setOptionCount(optionElements.length - 1)
         // Aquí puedes manipular el último elemento si es necesario
         setOptionCount(optionElements.length - 1);
@@ -134,7 +134,7 @@ export default function Header() {
                   <Link className="option" to="/option2">
                     <OptionButton description="option 2"></OptionButton>
                   </Link>
-                  <Link className="option" to={"option3"}>
+                  <Link className="option" to="/option3">
                     <OptionButton description="option 3"></OptionButton>
                   </Link>
                 </ul>
