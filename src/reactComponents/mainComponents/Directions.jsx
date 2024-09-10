@@ -19,6 +19,7 @@ export function Directions() {
         </Routes>
       ) : (
         <Routes>
+          <Route path="/" element={<ContentBody />} />
           <Route path="/furrysaviors" element={<ContentBody />} />
           <Route path="/furrysaviors/home" element={<ContentBody />} />
           <Route path="/furrysaviors/option1" element={<Option1 />} />
