@@ -32,7 +32,7 @@ export function ElementsA() {
   useEffect(() => {
     if (elementsWidth.length > 0) {
       elementsWidth.forEach((width, index) => {
-        console.log(`Ancho de elemento ${index + 1}:`, width);
+        // console.log(`Ancho de elemento ${index + 1}:`, width);
       });
     }
   }, [generalWidth]); // Mostrar cuando `elementsWidth` se actualiza
@@ -46,7 +46,7 @@ export function ElementsA() {
       ...prev,
       elementsLength
     }))
-    console.log(`-------------------`);
+    // console.log(`-------------------`);
     // console.log(`Elements length: ${elementsCount.elementsLength}`);
 
   }, [generalWidth], [])
