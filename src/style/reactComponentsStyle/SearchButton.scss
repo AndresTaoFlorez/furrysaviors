@@ -1,6 +1,8 @@
 :root{
-  --searchInputHeight: 0px;
-  --searchButtonIconWidth: 0px;
+  // --searchInputHeight: 0px;
+  --searchInputHeight: 20px;
+  --searchInputWidth: 200px;
+  --animationDuration: 200ms;
 }
 
 .searchButton {
@@ -18,63 +20,52 @@
   }
   .searchButtonBar{
     display: flex;
-    height: 95%;
-    height: 0;
     justify-content: center;
     
 
     input.searchInput {
       border: none;
       z-index: 10;
-      padding: 0 1rem;
+      padding: 1rem;
       border-radius: 0 0 0.5rem 0.5rem;
       background-color: #e8e8e8;
       box-shadow: 0 5px 50px #c5c5c5;
     }
-  }
-  .searchButtonOpened {
-
     input.searchInput {
+  
       animation: openSearchButton var(--animationDuration) forwards;
-
+  
       &:focus {
         outline-color: #e8e8e8;
         margin: 0 2px;
         box-shadow: 0 5px 50px #c5c5c5a1,
           inset 0 5px 50px #ffffff;
         transition: var(--animationDuration);
-
+  
       }
     }
   }
-  .searchButtonOut {
-    transition: all var(--animationDuration) ;
-    animation: closedSearchButton var(--animationDuration);
+  .searchButtonAnimation {
+    animation: openSearchButton var(--animationDuration) reverse forwards !important;
   }
+  
 
   // Animation
   @keyframes openSearchButton {
     0% {
       height: 0;
       width: 0;
-      width: var(--searchButtonIconWidth);
+      transform: scaleX(0);
     }
     100% {
       height: var(--searchInputHeight);
-      width: 200px;
+      width: var(--searchInputWidth);
+      transform: scaleX(1);
     }
   }
-  @keyframes closedSearchButton {
-    0% {
-      // width: 0;
-      width: 200px;
-    }
-    100% {
-      width: var(--searchButtonIconWidth);
-      width: 0;
-    }
-  }
+  
 }
+
 
 @keyframes openSearchIcon {
   0% {

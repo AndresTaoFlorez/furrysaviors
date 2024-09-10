@@ -22,7 +22,7 @@ function Modal({ children, setState = '', state = '', setPreState = () => { } })
             onMouseDelay(() => {
               setState((prev) => ({ ...prev, state: true, focused: false }))
               setPreState(false)
-            }, 20)
+            }, 200)
           }}
         ></div>
         {children}
@@ -30,7 +30,7 @@ function Modal({ children, setState = '', state = '', setPreState = () => { } })
     </>)
 }
 
-export function ModalTest({ children, setModalState = () => { }, modalState }) {
+export function ModalTest({ children, setModalState = () => { }, modalState, modalDuration }) {
 
   const delay = async (callback, delay = 1000) => {
     setTimeout(callback, delay);
@@ -42,7 +42,7 @@ export function ModalTest({ children, setModalState = () => { }, modalState }) {
           setModalState(false)
           delay(() => {
             setModalState(true)
-          }, 300)
+          }, 2000)
         }}
       >
       </div>

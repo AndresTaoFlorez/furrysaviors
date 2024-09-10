@@ -50,7 +50,7 @@ export function Login() {
 
       onMouseOver={() => handleHover0(true)}
       onMouseOut={() => handleHover0(false)}
-      style={{ '--loginAnimationDuration': '120ms', '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
+      style={{'--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
     >
       {!clicStatus ? (
         <div className='loginImage' ref={loginButtonRef}
@@ -64,10 +64,10 @@ export function Login() {
           <img src="../../../public/resources/user-svgrepo-com.svg" alt="hipsum logo" />
         </div>
       ) : (
-        <ModalTest modalState={animation} setModalState={(e) => {handleHover(e)}}>
+        <ModalTest modalState={animation} setModalState={(e) => handleHover(e)} modalDuration={10000}>
           <div className='block' style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}></div>
           {/* LITTLE LOGIN */}
-          <div className={`littleLogin ${animation ? 'littleLogin_animation' : 'littleLogin_animation_out'}`}>
+          <div className={`littleLogin ${clicStatus ? '' : 'littleLogin_animation'}`}>
             <div className="login-container" >
               <h1>Login</h1>
               <label to="username">Usuario:</label>

@@ -40,8 +40,7 @@ export function SearchButton(props) {
         </div>
         : ( // SEARCH BAR INPUT TO WRITE
           <Modal setState={setClickStatus} state={clickStatus} setPreState={setAnimation}>
-            <div className={`${!animation ? `searchButtonOpened` : `searchButtonOut`} searchButtonBar`}
-              style={{ '--searchInputHeight': initialSize.searchButtonHeight + 'px', '--searchInputWidth': initialSize.searchButtonWidth + 'px', '--animationDuration': '100ms' }}>
+            <div className={`${!animation ? `` : `searchButtonAnimation`} searchButtonBar`}>
               <input type="text" className="searchInput" placeholder='Search'
                 onClick={() => { setClickStatus(e => ({ ...e, focused: true })) }}
                 onMouseOver={() => { setClickStatus(e => ({ ...e, focused: true })) }}

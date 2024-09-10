@@ -9,7 +9,8 @@ export function Option3() {
       <div className="option3_mainTitle">
         {/* <h1>Option3 from navbar options</h1> */}
 
-        <ElementsA></ElementsA>
+        <ElementsA>
+        </ElementsA>
 
       </div>
     </div>

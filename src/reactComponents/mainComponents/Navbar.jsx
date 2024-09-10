@@ -64,20 +64,20 @@ export default function Header() {
   // ------- EXPERIMENTO
 
   // ASD0001:
-  useEffect(() => {
-    if (navElementsCount.current && !generalWidth.broke) {
-      const optionElements = navElementsCount.current.querySelectorAll('.option');
-      const lastElement = optionElements[optionCount - 1]; // Acceder al último elemento
-      // console.log('Último elemento:', lastElement);
-      if (lastElement) {
-        lastElement.remove(); // Eliminar el último elemento del DOM
-        // console.log('Último elemento eliminado');
-        // setOptionCount(optionElements.length - 1)
-        // Aquí puedes manipular el último elemento si es necesario
-        setOptionCount(optionElements.length - 1);
-      }
-    }
-  }, [generalWidth.broke],[]); // Dependencias actualizadas
+  // useEffect(() => {
+  //   if (navElementsCount.current && !generalWidth.broke) {
+  //     const optionElements = navElementsCount.current.querySelectorAll('.option');
+  //     const lastElement = optionElements[optionCount - 1]; // Acceder al último elemento
+  //     // console.log('Último elemento:', lastElement);
+  //     if (lastElement) {
+  //       lastElement.remove(); // Eliminar el último elemento del DOM
+  //       // console.log('Último elemento eliminado');
+  //       // setOptionCount(optionElements.length - 1)
+  //       // Aquí puedes manipular el último elemento si es necesario
+  //       setOptionCount(optionElements.length - 1);
+  //     }
+  //   }
+  // }, [generalWidth.broke],[]); // Dependencias actualizadas
 
 
   // ------- END EXPERIMENTO
@@ -122,7 +122,7 @@ export default function Header() {
               <MenuButton description="☰"></MenuButton>
             </div>
             <div ref={navElementsCount}>
-              {true && // element 2 ----------
+              {generalWidth.broke && // element 2 ----------
                 <ul className="navOptions" ref={navOptionsRef}>
                   <Link className="option" to="/home">
                     <OptionButton description="home"></OptionButton>
