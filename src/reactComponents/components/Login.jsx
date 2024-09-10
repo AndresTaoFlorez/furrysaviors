@@ -63,7 +63,7 @@ export function Login() {
             setAnimation(true)
           }}
         >
-          <img src="public\resources\user-svgrepo-com.svg" alt="hipsum logo" />
+          <img src="https://cdn-icons-png.flaticon.com/512/3293/3293466.png " alt="hipsum logo" />
         </div>
       ) : (
         <ModalTest modalState={clicStatus} setModalState={(e) => handleHover(e)} duration="200">
