@@ -12,9 +12,14 @@ $buttonHeight: 64px;
 :root {
   --littleLoginHeight: 230px;
   --littleLoginWidth: fit-content;
-  --loginAnimationDuration: 2000ms;
+  --loginAnimationDuration: 200ms;
 }
 
+@mixin starting-style {
+  overflow: hidden;
+  height: var(--littleLoginHeight);
+  animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51, -0.28, 0.25, 1) forwards;
+}
 
 
 .Login {
@@ -73,7 +78,9 @@ $buttonHeight: 64px;
     transition: all 1000ms ease;
     z-index: 2;
     right: 1%;
-   
+
+    @include starting-style;
+
 
     .login-container {       
       padding: 10px 20px;
@@ -127,29 +134,16 @@ $buttonHeight: 64px;
         }
       }
     }
+    
+  }
+  .littleLogin_animation_out {
+    @include starting-style();
+    animation-name: loginAnimationOut;
 
-    overflow: hidden;
-    height: var(--littleLoginHeight);
-    animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51,-0.28, 0.25, 1) forwards;
   }
 
-  // .littleLogin_animation {
-  //   overflow: hidden;
-  //   // height: 0px;
-  //   animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51,-0.28, 0.25, 1) reverse forwards;
-  // }
 
-  @keyframes loginAnimation {
-    0% {
-      height: 0;
-      transform: scaleY(0);
-      transform: scaleX(1);
-    }
-    100% {
-      transform: scaleY(1);
-
-    }
-  }
+ 
 
 }
 .block { // Componte de relleno atrás del littleLogin en Absolute
@@ -164,3 +158,32 @@ $buttonHeight: 64px;
 // ANIMATIONS 
 
 
+@keyframes loginAnimation {
+  0% {
+    height: 0;
+    transform: scaleY(0);
+    transform: scaleX(1);
+  }
+  100% {
+    scale: 1;
+    height: var(--littleLoginHeight);
+    transform: scaleY(1);
+    transform: scaleX(1);
+
+  }
+}
+
+@keyframes loginAnimationOut {
+  0% {
+    scale: 1;
+    height: var(--littleLoginHeight);
+    transform: scaleY(1);
+    transform: scaleX(1);
+  }
+  100% {
+    height: 0;
+    transform: scaleY(0);
+    transform: scaleX(1);
+
+  }
+}

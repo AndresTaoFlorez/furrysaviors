@@ -25,21 +25,23 @@ export function Login() {
   const [clicStatus, setClicStatus] = useState(false)
   const [animation, setAnimation] = useState(null)
 
-  const handleHover = (e) => {
-    setAnimation(e)
-    if (!isHovered.focused) {
-      setAnimation(false)
-      onMouseDelay(() => {
-        setClicStatus(!clicStatus)
-        setAnimation(!e)
-      }, 100)
-    }
-  };
-
   const onMouseDelay = async (callback, delay = 1000) => {
     // console.log('onMouseDelay');
     setTimeout(callback, delay);
   };
+  const handleHover = (e) => {
+    
+    if (clicStatus) {
+      setAnimation(e)
+      console.log(e);
+      onMouseDelay(() => {
+        setClicStatus(!clicStatus)
+        setAnimation(!e)
+      }, 200)
+    }
+  };
+
+ 
 
   const handleHover0 = (state = Boolean) => {
     setIsHovered((prev) => ({ ...prev, LoginHover: state }))
@@ -50,7 +52,7 @@ export function Login() {
 
       onMouseOver={() => handleHover0(true)}
       onMouseOut={() => handleHover0(false)}
-      style={{'--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
+      style={{ '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
     >
       {!clicStatus ? (
         <div className='loginImage' ref={loginButtonRef}
@@ -61,13 +63,13 @@ export function Login() {
             setAnimation(true)
           }}
         >
-          <img src="../../../public/resources/user-svgrepo-com.svg" alt="hipsum logo" />
+          <img src="public\resources\user-svgrepo-com.svg" alt="hipsum logo" />
         </div>
       ) : (
-        <ModalTest modalState={animation} setModalState={(e) => handleHover(e)} modalDuration={10000}>
+        <ModalTest modalState={clicStatus} setModalState={(e) => handleHover(e)} duration="200">
           <div className='block' style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}></div>
           {/* LITTLE LOGIN */}
-          <div className={`littleLogin ${clicStatus ? '' : 'littleLogin_animation'}`}>
+          <div className={`littleLogin ${animation ? '' : 'littleLogin_animation_out'}`}>
             <div className="login-container" >
               <h1>Login</h1>
               <label to="username">Usuario:</label>

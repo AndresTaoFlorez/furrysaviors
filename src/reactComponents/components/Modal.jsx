@@ -30,9 +30,9 @@ function Modal({ children, setState = '', state = '', setPreState = () => { } })
     </>)
 }
 
-export function ModalTest({ children, setModalState = () => { }, modalState, modalDuration }) {
+export function ModalTest({ children, setModalState = () => {}, modalState, duration="200" }) {
 
-  const delay = async (callback, delay = 1000) => {
+  const delay = async (callback, delay) => {
     setTimeout(callback, delay);
   };
   return (<>
@@ -42,7 +42,7 @@ export function ModalTest({ children, setModalState = () => { }, modalState, mod
           setModalState(false)
           delay(() => {
             setModalState(true)
-          }, 2000)
+          }, Number(duration))
         }}
       >
       </div>
