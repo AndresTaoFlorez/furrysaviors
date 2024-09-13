@@ -124,17 +124,17 @@ export default function Header() {
             <div ref={navElementsCount}>
               {generalWidth.broke && // element 2 ----------
                 <ul className="navOptions" ref={navOptionsRef}>
-                  <Link className="option" to={process.env.NODE_ENV === "development" ? "/home" : "/furrysaviors/home"}>
+                  <Link className="option" to={"/furrysaviors/home"}>
                     <OptionButton description="home"></OptionButton>
                   </Link>
-                  <Link className="option" to={process.env.NODE_ENV === "development" ? "/option1" : "/furrysaviors//option1"}>
+                  <Link className="option" to={"/furrysaviors/option1"}>
                     <OptionButton description="option 1"></OptionButton>
                   </Link>
                   <SearchButton description="🔍" id="searchButton"></SearchButton>
-                  <Link className="option" to={process.env.NODE_ENV === "development" ? "/option2" : "/furrysaviors//option2"}>
+                  <Link className="option" to={ "/furrysaviors/option2"}>
                     <OptionButton description="option 2"></OptionButton>
                   </Link>
-                  <Link className="option" to={process.env.NODE_ENV === "development" ? "/option3" : "/furrysaviors/option3"}>
+                  <Link className="option" to={"/furrysaviors/option3"}>
                     <OptionButton description="option 3"></OptionButton>
                   </Link>
                 </ul>

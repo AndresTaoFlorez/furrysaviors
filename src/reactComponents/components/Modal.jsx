@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import '../../style/reactComponentsStyle/Modal.scss'
 
-function Modal({ children, setState = '', state = '', setPreState = () => { } }) {
+function Modal({ children, setState = '', state = '', setPreState = () => {}, duration=200 }) {
 
-  const onMouseDelay = async (callback, delay = 1000) => {
+  const onMouseDelay = async (callback, duration = 1000) => {
     // console.log('onMouseDelay');
-    setTimeout(callback, delay);
+    setTimeout(callback, duration);
   };
 
   return (
@@ -22,7 +22,7 @@ function Modal({ children, setState = '', state = '', setPreState = () => { } })
             onMouseDelay(() => {
               setState((prev) => ({ ...prev, state: true, focused: false }))
               setPreState(false)
-            }, 200)
+            }, duration)
           }}
         ></div>
         {children}
@@ -30,8 +30,9 @@ function Modal({ children, setState = '', state = '', setPreState = () => { } })
     </>)
 }
 
-export function ModalTest({ children, setModalState = () => {}, modalState, duration="200" }) {
-
+export function ModalTest({ children, setModalState = () => {}, modalState, duration=200 }) {
+  console.log(duration);
+  
   const delay = async (callback, delay) => {
     setTimeout(callback, delay);
   };

@@ -1,7 +1,7 @@
 import '../../style/mainComponentsStyle/App.scss';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import {Directions} from './Directions';
+import { Directions } from './Directions';
 import { BrowserRouter } from 'react-router-dom';
 import { NavbarProvider } from '../context/NavbarContext';
 
@@ -12,7 +12,7 @@ export default function App() {
         <NavbarProvider>
           {/* Navbar siempre visible */}
           <Navbar />
-          <Directions/>
+          <Directions />
           <Footer />
         </NavbarProvider>
       </div>

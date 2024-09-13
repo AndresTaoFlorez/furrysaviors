@@ -2,7 +2,7 @@
   // --searchInputHeight: 0px;
   --searchInputHeight: 20px;
   --searchInputWidth: 200px;
-  --animationDuration: 200ms;
+  --animationDuration: 100ms;
 }
 
 .searchButton {
@@ -13,10 +13,9 @@
   
   .searchButtonIcon {
     // animation: openSearchIcon var(--animationDuration) reverse;
-    animation: openSearchIcon 200ms;
+    animation: openSearchIcon var(--animationDuration);
     width: fit-content;
     height: fit-content;
-    transition: all 500ms;
   }
   .searchButtonBar{
     display: flex;

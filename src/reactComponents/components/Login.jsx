@@ -25,19 +25,18 @@ export function Login() {
   const [clicStatus, setClicStatus] = useState(false)
   const [animation, setAnimation] = useState(null)
 
-  const onMouseDelay = async (callback, delay = 1000) => {
+  const onMouseDelay = async (callback, delay = 800) => {
     // console.log('onMouseDelay');
     setTimeout(callback, delay);
   };
   const handleHover = (e) => {
-    
     if (clicStatus) {
       setAnimation(e)
       console.log(e);
       onMouseDelay(() => {
         setClicStatus(!clicStatus)
         setAnimation(!e)
-      }, 200)
+      }, 100)
     }
   };
 
@@ -49,7 +48,6 @@ export function Login() {
 
   return (<>
     <div className="Login"
-
       onMouseOver={() => handleHover0(true)}
       onMouseOut={() => handleHover0(false)}
       style={{ '--loginButtonRef_height': initialSize.loginButtonRef_height + 'px', '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}
@@ -63,10 +61,10 @@ export function Login() {
             setAnimation(true)
           }}
         >
-          <img src="https://cdn-icons-png.flaticon.com/512/3293/3293466.png " alt="hipsum logo" />
+          <img src="https://img.icons8.com/?size=100&id=7rcs0z3sdioE&format=png&color=000000" alt="user icon" />
         </div>
       ) : (
-        <ModalTest modalState={clicStatus} setModalState={(e) => handleHover(e)} duration="200">
+        <ModalTest modalState={clicStatus} setModalState={(e) => handleHover(e)} duration={1000}>
           <div className='block' style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}></div>
           {/* LITTLE LOGIN */}
           <div className={`littleLogin ${animation ? '' : 'littleLogin_animation_out'}`}>

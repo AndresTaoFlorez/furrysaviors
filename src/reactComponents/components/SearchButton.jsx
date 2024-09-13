@@ -39,7 +39,7 @@ export function SearchButton(props) {
           <OptionButton description={props.description}></OptionButton>
         </div>
         : ( // SEARCH BAR INPUT TO WRITE
-          <Modal setState={setClickStatus} state={clickStatus} setPreState={setAnimation}>
+          <Modal setState={setClickStatus} state={clickStatus} setPreState={setAnimation} duration={150}>
             <div className={`${!animation ? `` : `searchButtonAnimation`} searchButtonBar`}>
               <input type="text" className="searchInput" placeholder='Search'
                 onClick={() => { setClickStatus(e => ({ ...e, focused: true })) }}
