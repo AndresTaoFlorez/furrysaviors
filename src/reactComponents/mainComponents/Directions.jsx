@@ -8,15 +8,13 @@ import { Option3 } from '../moreComponents/Option3';
 export function Directions() {
   return (
     // Definición de las rutas
-    <div>
-      <Routes>
-        <Route path="/" element={<ContentBody />} />
-        <Route path="/home" element={<ContentBody />} />
-        <Route path="/option1" element={<Option1 />} />
-        <Route path="/option2" element={<Option2 />} />
-        <Route path="/option3" element={<Option3 />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<ContentBody />} />
+      <Route path="/home" element={<ContentBody />} />
+      <Route path="/option1" element={<Option1 />} />
+      <Route path="/option2" element={<Option2 />} />
+      <Route path="/option3" element={<Option3 />} />
+    </Routes>
 
 
   );

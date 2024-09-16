@@ -59,30 +59,8 @@ export default function Header() {
     // console.log(optionCount);
 
   }, [headerContentRef_width, initialWidth]);
-  // ------- end --- counter of elements
 
-  // ------- EXPERIMENTO
-
-  // ASD0001:
-  // useEffect(() => {
-  //   if (navElementsCount.current && !generalWidth.broke) {
-  //     const optionElements = navElementsCount.current.querySelectorAll('.option');
-  //     const lastElement = optionElements[optionCount - 1]; // Acceder al último elemento
-  //     // console.log('Último elemento:', lastElement);
-  //     if (lastElement) {
-  //       lastElement.remove(); // Eliminar el último elemento del DOM
-  //       // console.log('Último elemento eliminado');
-  //       // setOptionCount(optionElements.length - 1)
-  //       // Aquí puedes manipular el último elemento si es necesario
-  //       setOptionCount(optionElements.length - 1);
-  //     }
-  //   }
-  // }, [generalWidth.broke],[]); // Dependencias actualizadas
-
-
-  // ------- END EXPERIMENTO
-
-
+  // Calcula el ancho de los elementos del NavBar
   useEffect(() => {
     // console.log(generalWidth)
     setInitialWidth(prev => ({
@@ -113,34 +91,34 @@ export default function Header() {
   ]);
 
   return (<>
-    <div className="headerContent" ref={headerContentRef}> {/* Absolute */}
+    <div className='headerContent' ref={headerContentRef}> {/* Absolute */}
       {
         headerContentRef.current &&
         <div className='headerRelativeContent'> {/* Relative */}
           <nav className='headerStickyContent'>
-            <div className="menuButtonBox" ref={menuButtonRef}> {/* element 1 ---------- */}
-              <MenuButton description="☰"></MenuButton>
+            <div className='menuButtonBox' ref={menuButtonRef}> {/* element 1 ---------- */}
+              <MenuButton description='☰'></MenuButton>
             </div>
             <div ref={navElementsCount}>
               {generalWidth.broke && // element 2 ----------
-                <ul className="navOptions" ref={navOptionsRef}>
-                  <Link className="option" to={"/home"}>
-                    <OptionButton description="home"></OptionButton>
+                <ul className='navOptions' ref={navOptionsRef}>
+                  <Link className='option' to={'home'}>
+                    <OptionButton description='home'></OptionButton>
                   </Link>
-                  <Link className="option" to={"/option1"}>
-                    <OptionButton description="option 1"></OptionButton>
+                  <Link className='option' to={'option1'}>
+                    <OptionButton description='option 1'></OptionButton>
                   </Link>
-                  <SearchButton description="🔍" id="searchButton"></SearchButton>
-                  <Link className="option" to={ "/option2"}>
-                    <OptionButton description="option 2"></OptionButton>
+                  <SearchButton description='🔍' id='searchButton'></SearchButton>
+                  <Link className='option' to={'option2'}>
+                    <OptionButton description='option 2'></OptionButton>
                   </Link>
-                  <Link className="option" to={"/option3"}>
-                    <OptionButton description="option 3"></OptionButton>
+                  <Link className='option' to={'option3'}>
+                    <OptionButton description='option 3'></OptionButton>
                   </Link>
                 </ul>
               }
             </div>
-            <div className="loginComponent" ref={loginComponentRef}>
+            <div className='loginComponent' ref={loginComponentRef}>
               {/* element 3 ---------- */}
               <Login />
             </div>
