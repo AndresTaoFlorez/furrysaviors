@@ -32,7 +32,7 @@ export function Login() {
   const handleHover = (e) => {
     if (clicStatus) {
       setAnimation(e)
-      console.log(e);
+      // console.log(e);
       onMouseDelay(() => {
         setClicStatus(!clicStatus)
         setAnimation(!e)
@@ -40,10 +40,19 @@ export function Login() {
     }
   };
 
- 
+
 
   const handleHover0 = (state = Boolean) => {
     setIsHovered((prev) => ({ ...prev, LoginHover: state }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // console.log(e)
+    const user = e.target[0].value
+    const password = e.target[1].value
+
+    console.log({user, password})
   }
 
   return (<>
@@ -68,14 +77,14 @@ export function Login() {
           <div className='block' style={{ '--loginButtonRef_width': initialSize.loginButtonRef_width + 'px' }}></div>
           {/* LITTLE LOGIN */}
           <div className={`littleLogin ${animation ? '' : 'littleLogin_animation_out'}`}>
-            <div className="login-container" >
+            <form className="login-container" onSubmit={handleSubmit}>
               <h1>Login</h1>
               <label to="username">Usuario:</label>
               <input type="text" id="username" name="username" placeholder="Introduce tu usuario" />
               <label to="password">Contraseña:</label>
               <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" />
               <button>Send</button>
-            </div>
+            </form>
           </div>
         </ModalTest>
       )}

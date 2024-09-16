@@ -31,7 +31,7 @@ function Modal({ children, setState = '', state = '', setPreState = () => {}, du
 }
 
 export function ModalTest({ children, setModalState = () => {}, modalState, duration=200 }) {
-  console.log(duration);
+  // console.log(duration);
   
   const delay = async (callback, delay) => {
     setTimeout(callback, delay);
