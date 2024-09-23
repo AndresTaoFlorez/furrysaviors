@@ -1,9 +1,11 @@
 import { useState } from "react"
 import '../../style/reactComponentsStyle/MenuButton.scss'
+import { ModalTest } from './Modal'
 
 export function MenuButton(props) {
   const description = props.description
   const [isHovered, setIsHovered] = useState(false)
+  const [clickStatus, setClickStatus] = useState(false)
 
   const onMouseHoverOut = async () => {
     setTimeout(() => {
@@ -11,14 +13,21 @@ export function MenuButton(props) {
     }, 20)
   }
 
+  const handleClick = () => {
+    setClickStatus(!clickStatus)
+  }
+
   return (
-    <div className={`${isHovered ? 'growingMenuButton' : 'defaultButton'} menuButton`}
-      onMouseOver={async () => setIsHovered(true) }
-      onMouseOut={onMouseHoverOut}>
-      <div className='button'>
-        {description}
+    <ModalTest modalState={clickStatus} setModalState={handleClick}>
+      <div className={`${isHovered ? 'growingMenuButton' : 'defaultButton'} menuButton`}
+        onClick={handleClick}
+        onMouseOver={async () => setIsHovered(true)}
+        onMouseOut={onMouseHoverOut}>
+        <div className='button'>
+          {description}
+        </div>
       </div>
-    </div>
+    </ModalTest>
   )
 }
 

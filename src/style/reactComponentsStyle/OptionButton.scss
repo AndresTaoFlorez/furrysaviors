@@ -22,7 +22,6 @@ $buttonHeight: fit-content;
   transition: all 100ms ease-in-out;
   text-wrap: nowrap;
 
-
   .button {
     font-size: $menu-btn-size;
     margin: 8px 10px 4px;
@@ -33,7 +32,6 @@ $buttonHeight: fit-content;
     pointer-events: none;
     user-select: none;
     transition: all 100ms ease-in-out;
-
   }
   
 }
@@ -48,10 +46,12 @@ $buttonHeight: fit-content;
   .button {
     font-size: calc($menu-btn-size + 2px);
     color: #212121;
+
   }
 
   &:active {
     scale: 1.02;
     filter: brightness(0.9);
+
   }
 }

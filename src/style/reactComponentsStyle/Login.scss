@@ -12,13 +12,14 @@ $buttonHeight: 64px;
 :root {
   --littleLoginHeight: 230px;
   --littleLoginWidth: 58px;
-  --loginAnimationDuration: 120ms;
+  --loginAnimationDuration: 200ms;
 }
 
 @mixin starting-style {
   overflow: hidden;
   height: var(--littleLoginHeight);
-  animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51, -0.28, 0.25, 1) forwards;
+  animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51, -0.28, 0.25, 1);
+  animation-fill-mode: forwards;
 }
 
 
@@ -61,20 +62,22 @@ $buttonHeight: 64px;
       scale: 1.04;
     }
 
-  img {
-    pointer-events: all;
-    height: 40px;
+    img {
+      pointer-events: all;
+      height: 40px;
+      -webkit-user-drag: none;
     }
   }
 
   .littleLogin {
     position: absolute;
     top: 0;
-    margin-top: -15px;
+    margin-top: -35px;
     pointer-events: all;
     user-select: all;
     // overflow: hidden;
     // width: var(--littleLoginWidth);
+    transform: translateY(-100%);
     height: var(--littleLoginHeight);
     background: #3a70fb;
     border-radius:0 0 10px 10px ;
@@ -153,6 +156,10 @@ $buttonHeight: 64px;
   height: calc(var(--loginButtonRef_height) + 1px);
   width: calc(var(--loginButtonRef_width) + 1px);
 }
+.blokedOut {
+  @extend .block;
+  background-color: red !important;  
+}
 
 
 
@@ -161,30 +168,30 @@ $buttonHeight: 64px;
 
 @keyframes loginAnimation {
   0% {
-    height: 0;
-    transform: scaleY(0);
-    transform: scaleX(1);
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    // height: var(--littleLoginHeight);
+    opacity: 0;
   }
   100% {
-    scale: 1;
     // height: var(--littleLoginHeight);
-    transform: scaleY(1);
-    transform: scaleX(1);
-
+    transform: translateY(0%);
+    opacity: 1;
   }
 }
 
 @keyframes loginAnimationOut {
   0% {
-    scale: 1;
-    height: var(--littleLoginHeight);
-    transform: scaleY(1);
-    transform: scaleX(1);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
   }
   100% {
-    height: 0;
-    transform: scaleY(0);
-    transform: scaleX(1);
-
+    transform: translateY(-(var(--littleLoginHeight)));
+    opacity: 0;
   }
 }

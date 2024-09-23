@@ -8,7 +8,7 @@ import { NavbarProvider } from '../context/NavbarContext';
 
 export default function App() {
   return (
-    <BrowserRouter basename={process.env.NODE_ENV === 'development' ? '' : '#'}>
+    <BrowserRouter basename={process.env.NODE_ENV === 'development' ? '/furrysaviors' : '#'}>
       <div className="App">
         <NavbarProvider>
           {/* Navbar siempre visible */}
