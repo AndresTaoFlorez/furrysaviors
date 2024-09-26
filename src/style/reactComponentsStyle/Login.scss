@@ -12,7 +12,9 @@ $buttonHeight: 64px;
 :root {
   --littleLoginHeight: 230px;
   --littleLoginWidth: 58px;
-  --loginAnimationDuration: 200ms;
+  --loginButtonRef_width: 58px;
+  --loginButtonRef_height: 64px;
+  --loginAnimationDuration: var(--modalAnimationDuration)
 }
 
 @mixin starting-style {
@@ -27,15 +29,13 @@ $buttonHeight: 64px;
   display: flex;
   position: relative;
   color: white;
-  width: $buttonWidth;
-  height: $buttonHeight;
   z-index: 1;
+  top: -2px;
   // width: var(--loginButtonRef_width);
   // height: var(--loginButtonRef_height);
-  background: #0F67B1;
-  border-radius: 0 0 10px 10px;
   align-items: center;
   justify-content: center;
+  // border-radius: 0 0 10px 10px;
   pointer-events: all;
 
   div {
@@ -45,20 +45,27 @@ $buttonHeight: 64px;
 
   .loginImage {
     display: flex;
+    width: $buttonWidth;
+    height: $buttonHeight;
     background: none;
+    background: #0F67B1;
     // width: var(--littleLoginHeight);
     // height: var(--littleLoginWidth);
     border: none;
     cursor: pointer;
     pointer-events: all;
+    border-radius: 0 0 10px 10px;
     user-select: none;
     transition: scale var(--loginAnimationDuration) ease-in-out;
     justify-content: center;
     align-items: center;
+    transition: all 70ms ease-in-out, background-color 0ms;
 
     &:hover {
       background: #3a70fb;
       @extend .Login;
+      cursor: pointer;
+      top: 0px;
       scale: 1.04;
     }
 
@@ -72,11 +79,8 @@ $buttonHeight: 64px;
   .littleLogin {
     position: absolute;
     top: 0;
-    margin-top: -35px;
     pointer-events: all;
     user-select: all;
-    // overflow: hidden;
-    // width: var(--littleLoginWidth);
     transform: translateY(-100%);
     height: var(--littleLoginHeight);
     background: #3a70fb;
@@ -158,13 +162,12 @@ $buttonHeight: 64px;
 }
 .blokedOut {
   @extend .block;
-  background-color: red !important;  
+  transition: background 180ms;
+  background-color: transparent;  
 }
 
 
-
-// ANIMATIONS 
-
+// ANIMATIONS ----------------
 
 @keyframes loginAnimation {
   0% {

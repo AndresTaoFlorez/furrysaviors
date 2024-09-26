@@ -16,7 +16,7 @@ export default function ContentBody() {
     <div className="homePage">
       <div className="testingTitles">
         {/* <h1>Count: {generalWidth.optionsElements}</h1> */}
-        <h1>Broke: {String(generalWidth.broke)}</h1>
+        {/* <h1>Broke: {String(generalWidth.broke)}</h1> */}
       </div>
       <div className="mainTitle">
         <h1>Furry Saviors</h1>

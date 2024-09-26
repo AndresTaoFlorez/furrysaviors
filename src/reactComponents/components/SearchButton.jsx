@@ -1,6 +1,6 @@
 import '../../style/reactComponentsStyle/SearchButton.scss'
 import { OptionButton } from "./OptionButton"
-import Modal from './Modal'
+import { ModalTest } from './Modal'
 import { useState, useRef, useEffect } from 'react'
 import useInitialHeight from '../customHooks/useInitialHeight'
 import useInitialWidth from '../customHooks/useInitialWidth'
@@ -8,7 +8,7 @@ import useMaxInitialWidth from '../customHooks/useMaxInitialWidth'
 // importar contexto
 
 export function SearchButton(props) {
-  const [clickStatus, setClickStatus] = useState({ state: true, focused: false })
+  const [clickStatus, setClickStatus] = useState(false)
   const [initialSize, setInitialSize] = useState({})
   const searchButtonRef = useRef(null)
   const searchButtonIconRef = useRef(null)
@@ -20,6 +20,20 @@ export function SearchButton(props) {
   useInitialHeight(searchButtonRef, (height) => { setInitialSize(prev => ({ ...prev, searchButtonHeight: height })) })
   useInitialWidth(searchButtonRef, (width) => { setInitialSize(prev => ({ ...prev, searchButtonWidth: width })) })
 
+
+  const handleClick = () => {
+    setClickStatus(!clickStatus)
+  }
+
+  const handleSearchBar = () => {
+    setAnimation(true)
+    setTimeout(() => {
+      // setIsHovered(false)
+      handleClick()
+      setAnimation(false)
+    }, 120)
+  }
+
   return (
     <div className='searchButton'
       style={{
@@ -27,26 +41,20 @@ export function SearchButton(props) {
         '--searchButtonIconWidth': initialSize.searchButtonIconWidth + 'px'
       }}
       ref={searchButtonRef}
-      onClick={() => {
-        if (!clickStatus.focused) {
-          setClickStatus(e => ({ ...e, state: !clickStatus.state }))
-        }
-      }}>
-      {clickStatus.state ?
-        <div className='searchButtonIcon' ref={searchButtonIconRef}
-
-        >
+    >
+      {!clickStatus ?
+        <div className='searchButtonIcon' ref={searchButtonIconRef} onClick={() => setClickStatus(!clickStatus)}>
           <OptionButton description={props.description}></OptionButton>
         </div>
         : ( // SEARCH BAR INPUT TO WRITE
-          <Modal setState={setClickStatus} state={clickStatus} setPreState={setAnimation} duration={150}>
-            <div className={`${!animation ? `` : `searchButtonAnimation`} searchButtonBar`}>
+          <ModalTest setModalState={handleSearchBar} modalState={clickStatus}>
+            <div className={`searchButtonBar ${animation &&'searchButtonAnimation'}`}>
               <input type="text" className="searchInput" placeholder='Search'
-                onClick={() => { setClickStatus(e => ({ ...e, focused: true })) }}
-                onMouseOver={() => { setClickStatus(e => ({ ...e, focused: true })) }}
-                onMouseOut={() => { setClickStatus(e => ({ ...e, focused: false })) }} />
+                autoFocus
+              />
+
             </div>
-          </Modal>
+          </ModalTest>
         )
       }
     </div>

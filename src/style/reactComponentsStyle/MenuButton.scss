@@ -1,11 +1,17 @@
 $backgroundColor: #3FA2F6;
-
 $menu-btn-size: 30px;
 
-// --- button config
+// --- button config --
 $buttonWidth: 60px;
 $buttonHeight: 67px;
-.menuButton { // <Button>
+// --- button config --
+
+@mixin starting-style-menu {
+  animation: buttonOpen var(--loginAnimationDuration) cubic-bezier(0.51, -0.28, 0.25, 1);
+  animation-fill-mode: forwards;
+}
+
+.menuButton { // <Button> - -
   display: flex;
   background: $backgroundColor;
   width: $buttonWidth;
@@ -15,6 +21,8 @@ $buttonHeight: 67px;
   border-radius: 0 0 5px 5px;
   align-items: center;
   transition: all 100ms ease-in-out;
+
+  
 
   .button {
     font-size: $menu-btn-size;
@@ -26,16 +34,115 @@ $buttonHeight: 67px;
     pointer-events: none;
     user-select: none;
     transition: all 100ms ease-in-out;
-}
+  }
+
+  &:hover {
+    background: #3a70fb;
+    border-radius: 0 0 5px 5px;
+    cursor: pointer;
+    scale: 1.04;
+
+    .button {
+      top: 1px;
+      font-size: 2em;
+    }
+  }
 }
 
-.growingMenuButton { // when hover on <Button>
-  height: calc($buttonHeight + ($buttonHeight * 0.05));
-  width: calc($buttonWidth + 2px);
+// menu button, block and modal background
+.menuButtonBlock{
+  display: flex;
+  position: relative;
+  height: 70px;
+  width: 62px;
+}
+
+
+.menuOptions {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  height: fit-content;
+  padding-bottom: 1.5em;
+  width: 200px;
   background: #3a70fb;
-  border-radius: 0 0 5px 5px;
-  cursor: pointer;
-  .button {
-    font-size: 2.2em;
+  border-radius: 0 0 10px 10px;
+  align-items: center;
+  color: azure;
+  @include starting-style-menu;
+
+  .menuOptionsList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+  }
+}
+
+.menuOptionsOut {
+  @include starting-style-menu;
+  animation-name: buttonClose;
+}
+
+
+
+.optionMenuButton {
+  display: flex;
+  height: 40px;
+  background: #2757cf;
+  padding: 0.4em 0.8em;
+  margin: 5px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  transition: scale 100ms ease-in-out;
+
+  h2 {
+    top: 0;
+  }
+
+  &:hover {
+    scale: 1.1;
+    cursor: pointer;
+    color: aliceblue;
+  }
+  &:active {
+    background: #4974e2;
+    font-size: 1.02em;
+    border: 1px solid #2757cf;
+  }
+}
+
+// keyframes
+
+@keyframes buttonOpen {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes buttonClose {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-(var(--littleLoginHeight)));
+    opacity: 0;
   }
 }
