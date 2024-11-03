@@ -1,7 +1,7 @@
 import '../../style/reactComponentsStyle/SearchButton.scss'
 import { OptionButton } from "./OptionButton"
-import { ModalTest } from './Modal'
-import { useState, useRef, useEffect } from 'react'
+import ModalTest from './Modal'
+import { useState, useRef } from 'react'
 import useInitialHeight from '../customHooks/useInitialHeight'
 import useInitialWidth from '../customHooks/useInitialWidth'
 import useMaxInitialWidth from '../customHooks/useMaxInitialWidth'

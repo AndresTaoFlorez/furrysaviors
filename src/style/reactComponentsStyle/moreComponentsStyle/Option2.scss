@@ -10,7 +10,8 @@
   background-size: cover;
   
   .option2_mainTitle {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     width: -webkit-fill-available;
     height: 100vh;
     background: #227B94;
@@ -18,7 +19,43 @@
     align-items: center;
 
     h1 {
+      text-align: center;
       color: antiquewhite;
     }
+
+   .box2 {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    article {
+      display: flex;
+      height: 200px;
+      width: 300px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #071619;
+      margin: 1em;
+      transition: height 0.3s, box-shadow 0.3s;
+      interpolate-size: allow-keywords;
+
+      img {
+        opacity: 0;
+        height: 100%;
+        width: 100%;
+        transition: opacity 0.1s;
+      }
+    }
+
+    article:hover {
+      cursor: pointer;
+      height: fit-content;
+      box-shadow: 0px 0px 60px 5px#ffffff9d;
+
+      img {
+        opacity: 1;
+      }
+    }
+   }
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import '../../style/reactComponentsStyle/MenuButton.scss'
-import { ModalTest } from './Modal'
+import ModalTest from './Modal'
 import { OptionButton } from "./OptionButton"
 
 export function MenuButton(props) {

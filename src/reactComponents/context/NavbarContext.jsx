@@ -2,7 +2,7 @@
 
 // Crear contexto para el Navbar
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 
 export const NavbarContext = createContext();
 

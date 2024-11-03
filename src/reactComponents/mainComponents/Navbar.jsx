@@ -6,7 +6,7 @@ import { NavbarContext } from '../context/NavbarContext'
 import { MenuButton } from '../components/MenuButton'
 import { OptionButton } from '../components/OptionButton'
 import { SearchButton } from '../components/SearchButton'
-import { Login } from '../components/Login'
+import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
 
 

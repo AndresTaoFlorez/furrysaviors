@@ -78,7 +78,7 @@ $buttonHeight: 64px;
 
   .littleLogin {
     position: absolute;
-    top: 0;
+    top: calc(var(--loginButtonRef_height) * -0.5);
     pointer-events: all;
     user-select: all;
     transform: translateY(-100%);
@@ -100,10 +100,12 @@ $buttonHeight: 64px;
 
       h1 {
         margin: 5px;
+        user-select: none;
       }
 
       label {
         align-self: baseline;
+        user-select: none;
       }
 
       input {
@@ -127,6 +129,7 @@ $buttonHeight: 64px;
 
       button {
         display: flex;
+        user-select: none;
         margin-top: 10px;
         color: #14396A !important;
         border: none;
