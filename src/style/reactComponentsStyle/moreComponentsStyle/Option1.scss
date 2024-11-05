@@ -1,18 +1,19 @@
-
 .option1 {
   display: flex;
   flex-direction: column;
   width: -webkit-fill-available;
-  // background-image: 
+  // background-image:
   //   linear-gradient(#10456eb8, #04070aa7), url(https://media.giphy.com/media/KZFrf9JusXzmpnPsT6/giphy.gif?cid=790b7611u9aq5oainzo5ovke5ydr4w0ac8yego30ej0ou49o&ep=v1_gifs_search&rid=giphy.gif&ct=g); /* Imagen de fondo */
   background-image: linear-gradient(#10466efd, #04070af3);
   background-size: cover;
 
   .option1_mainTitle {
     display: flex;
+    padding: 3em 0;
+    flex-direction: column;
     position: relative;
     width: -webkit-fill-available;
-    height: 100vh;
+    min-height: 100vh;
     background: #229799;
     justify-content: center;
     align-items: center;
@@ -29,6 +30,89 @@
       text-align: center;
       font-size: 1em;
       color: rgb(0, 255, 255);
+    }
+  }
+
+  .option1_elements {
+    max-width: 80vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    .option1_elements_child {
+      display: flex;
+      width: 300px;
+      height: 220px;
+      background: #437790;
+      flex-direction: column;
+      border: 1px solid rgb(35, 62, 66);
+      border-radius: 1em;
+      padding-bottom: 1em;
+      overflow: hidden;
+    }
+    .option1_elements_child_title {
+      display: flex;
+      padding: 1em;
+      width: 100%;
+      background-color: rgba(16, 63, 71, 0.504);
+      box-sizing: border-box;
+
+      h2 {
+        margin: 0;
+        padding: 0;
+        color: white;
+      }
+    }
+    .option1_elements_child_info {
+      margin: 0;
+      padding: 0 1em;
+      height: 100%;
+
+      .two-elements {
+        display: flex;
+        flex-direction: row;
+        gap: 1em;
+        justify-content: center;
+
+        p {
+          font-size: 1.2em;
+          padding-left: 0.3em;
+          font-weight: 500;
+          color: rgb(42, 30, 138);
+        }
+
+        .option1_elements_child_info_audio_image {
+          position: relative;
+          display: flex;
+          width: 190px;
+          height: 140px;
+          margin: 0.5em 0;
+          object-fit: cover;
+          border-radius: 1em;
+          overflow: hidden;
+          transition: transform 0.1s ease-in-out;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: all;
+            user-select: all;
+          }
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          &:active {
+            transform: scale(1.05);
+          }
+        }
+      }
     }
   }
 }

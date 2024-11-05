@@ -14,16 +14,16 @@ $buttonHeight: 64px;
   --littleLoginWidth: 58px;
   --loginButtonRef_width: 58px;
   --loginButtonRef_height: 64px;
-  --loginAnimationDuration: var(--modalAnimationDuration)
+  --loginAnimationDuration: var(--modalAnimationDuration);
 }
 
 @mixin starting-style {
   overflow: hidden;
   height: var(--littleLoginHeight);
-  animation: loginAnimation var(--loginAnimationDuration) cubic-bezier(0.51, -0.28, 0.25, 1);
+  animation: loginAnimation var(--loginAnimationDuration)
+    cubic-bezier(0.51, -0.28, 0.25, 1);
   animation-fill-mode: forwards;
 }
-
 
 .Login {
   display: flex;
@@ -31,7 +31,7 @@ $buttonHeight: 64px;
   color: white;
   z-index: 1;
   top: -2px;
-  // width: var(--loginButtonRef_width);
+  width: var(--loginButtonRef_width);
   // height: var(--loginButtonRef_height);
   align-items: center;
   justify-content: center;
@@ -44,11 +44,15 @@ $buttonHeight: 64px;
   }
 
   .loginImage {
+    position: absolute;
     display: flex;
-    width: $buttonWidth;
+    // width: $buttonWidth;
+    width: fit-content;
+    right: 1%;
+    padding: 0 10px;
     height: $buttonHeight;
     background: none;
-    background: #0F67B1;
+    background: #0f67b1;
     // width: var(--littleLoginHeight);
     // height: var(--littleLoginWidth);
     border: none;
@@ -63,7 +67,6 @@ $buttonHeight: 64px;
 
     &:hover {
       background: #3a70fb;
-      @extend .Login;
       cursor: pointer;
       top: 0px;
       scale: 1.04;
@@ -84,14 +87,14 @@ $buttonHeight: 64px;
     transform: translateY(-100%);
     height: var(--littleLoginHeight);
     background: #3a70fb;
-    border-radius:0 0 10px 10px ;
+    border-radius: 0 0 10px 10px;
     transition: all 1000ms ease;
     z-index: 2;
     right: 1%;
 
     @include starting-style;
 
-    .login-container {       
+    .login-container {
       padding: 10px 20px;
       display: flex;
       flex-direction: column;
@@ -109,6 +112,7 @@ $buttonHeight: 64px;
       }
 
       input {
+        box-sizing: border-box;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 0.5rem;
@@ -122,42 +126,102 @@ $buttonHeight: 64px;
           outline-color: #e8e8e8;
           background: #e8e8e8;
           box-shadow: inset 20px 20px 60px #c5c5c5,
-             inset -20px -20px 60px #ffffff;
+            inset -20px -20px 60px #ffffff;
           transition: 0.3s;
-         }
+        }
+      }
+      .wrong_data {
+        background: #e8e8e8;
+        box-shadow: inset 0px 0px 5px #c5c5c5, inset 0px 0 1px 2px #fe4747;
+        transition: 0.1s;
       }
 
-      button {
+      .button-form {
         display: flex;
         user-select: none;
         margin-top: 10px;
-        color: #14396A !important;
+        color: #c9f1ff !important;
         border: none;
         font-size: 0.9em;
         padding: 8px 20px;
         border-radius: 10px;
-        background: #63B8EE;
-        background: linear-gradient(to top, #63B8EE, #468CCF);
+        background: #63b8ee;
+        background: linear-gradient(to top, #63b8ee, #468ccf);
         pointer-events: all;
         box-shadow: 0px 0px 1px rgba(39, 39, 39, 0.3);
         &:hover {
           cursor: pointer;
-          background: linear-gradient(to top, #468CCF, #63B8EE);
+          background: linear-gradient(to top, #468ccf, #63b8ee);
+        }
+        &:active {
+          color: #d7f9ee !important;
+          scale: 0.98;
+          background: linear-gradient(to top, #63b8ee, #468ccf);
         }
       }
     }
-    
   }
   .littleLogin_animation_out {
     @include starting-style();
     animation-name: loginAnimationOut;
   }
+  .logged {
+    display: flex;
+    width: auto;
+    margin-right: 50px;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 5px 5px;
+    border-radius: 0 0 10px 10px;
+    background-color: #7fe096;
+    pointer-events: all;
+    justify-content: end;
+    color: #499e5e;
+    font-weight: 500;
 
+    p {
+      font-size: 0.9em;
+      margin: 0;
+      padding: 0;
+    }
+    .username {
+      margin: 0;
+      padding: 0;
+      font-size: 1.2em;
+      color: #efefef;
+      justify-content: end;
+      font-weight: 600;
+      padding: 5px;
+      border-radius: 10px;
+      text-shadow: 0px 0px 1px rgba(39, 39, 39, 0.3);
+    }
 
- 
-
+    .button-logout {
+      display: flex;
+      user-select: none;
+      color: #c9f1ff !important;
+      border: none;
+      font-size: 0.9em;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #63b8ee;
+      background: linear-gradient(to top, #22996f, #228999);
+      pointer-events: all;
+      box-shadow: 0px 0px 1px rgba(39, 39, 39, 0.3);
+      &:hover {
+        cursor: pointer;
+        background: linear-gradient(to top, #228999, #228999);
+      }
+      &:active {
+        color: #d7f9ee !important;
+        scale: 0.98;
+        background: linear-gradient(to top, #3ba5b5, #33a9bb);
+      }
+    }
+  }
 }
-.block { // Componte de relleno atrás del littleLogin en Absolute
+.block {
+  // Componte de relleno atrás del littleLogin en Absolute
   display: flex;
   position: relative;
   height: calc(var(--loginButtonRef_height) + 1px);
@@ -166,9 +230,8 @@ $buttonHeight: 64px;
 .blokedOut {
   @extend .block;
   transition: background 180ms;
-  background-color: transparent;  
+  background-color: transparent;
 }
-
 
 // ANIMATIONS ----------------
 

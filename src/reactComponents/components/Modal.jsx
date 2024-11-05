@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import '../../style/reactComponentsStyle/Modal.scss'
 
 /**
  * @param {function} setModalState - Función para manejar el estado de clic.
  * @param {boolean} modalState - Estado de clic.
- * @param {number} duration - Duración de la animación.
  */
-const ModalTest = ({ children, setModalState = () => { }, modalState, duration = 200 }) => {
+const ModalTest = ({ children, setModalState = () => { }, modalState }) => {
 
   const handleModal = () => {
     setModalState(false);
@@ -43,42 +42,44 @@ const ModalTest = ({ children, setModalState = () => { }, modalState, duration =
   )
 }
 
-export const ModalContext = ({ children, setModalState = () => { }, modalState, duration = 200 }) => {
-
+/**
+ * @param {function} setToggleLogin - Función para manejar el estado de clic.
+ * @param {Object} toggleLogin - Estado de clic.
+ * @throws {Error} - Si no se proporciona una función setToggleLogin o un objeto toggleLogin.
+ */
+export const ModalContext = ({ children, setToggleLogin, toggleLogin }) => {
   const handleModal = () => {
-    setModalState(false);
-  }
+    setToggleLogin(prev => ({ ...prev, animation: false }));
+    setTimeout(() => {
+      setToggleLogin(prev => ({ ...prev, clickStatus: false }));
+    }, 200);
+  };
 
-  const handleKeyModal = (e) => {
-    if (e.key === 'Escape' && modalState) {
+  const handleKeyModal = useCallback((e) => {
+    if (e.key === 'Escape' && toggleLogin.animation) {
       handleModal();
     }
-  }
+  }, [toggleLogin.animation]);
 
   useEffect(() => {
-    if (modalState) {
+    if (toggleLogin.animation) {
       document.addEventListener('keydown', handleKeyModal);
+      return () => document.removeEventListener('keydown', handleKeyModal);
     }
-    // Cleanup para remover el listener cuando el componente se desmonta o el modal se cierra
-    return () => {
-      document.removeEventListener('keydown', handleKeyModal);
-    };
-  }, [modalState]); // El listener se activará solo si modalState es true
+  }, [toggleLogin.animation, handleKeyModal]);
 
-
-  return (<>
+  return (
     <div className='modalComponent'>
       <div
-        className={`modalBackground ${modalState ? "modalBackground--active" : "modalBackground--inactive"}`}
+        className={`modalBackground ${toggleLogin.animation ? "modalBackground--active" : "modalBackground--inactive"}`}
         onClick={handleModal}
       />
-      <div className={`children ${modalState ? "children--active" : "children--inactive"}`}>
+      <div className="children children--active">
         {children}
       </div>
     </div>
-  </>
-  )
-}
+  );
+};
 
 
 export default ModalTest

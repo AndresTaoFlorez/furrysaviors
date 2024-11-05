@@ -1,11 +1,13 @@
 import '../../style/mainComponentsStyle/Navbar.scss'
 import { useRef, useContext, useEffect, useState } from 'react'
+import { LoginContext } from '../context/LoginContext'
 
 import { NavbarContext } from '../context/NavbarContext'
 
 import { MenuButton } from '../components/MenuButton'
 import { OptionButton } from '../components/OptionButton'
 import { SearchButton } from '../components/SearchButton'
+import ProtectedRoutes from './ProtectedRoutes'
 import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
 
@@ -22,6 +24,7 @@ export default function Header() {
   const navElementsCount = useRef(null);
 
   const { generalWidth, setGeneralWidth } = useContext(NavbarContext)
+  const { userSession } = useContext(LoginContext)
 
   const navOptionsRef_width = useWidth(navOptionsRef)
   const headerContentRef_width = useWidth(headerContentRef)
@@ -34,61 +37,62 @@ export default function Header() {
       [key]: width // Actualiza correctamente preservando los valores anteriores
     })))
   }
-  const useCalculateMaxInitialWidth = (key, setElementSomething, elementRef) => {
-    useMaxInitialWidth(elementRef, (width) => setElementSomething(prev => ({
-      ...prev,
-      [key]: width // Actualiza correctamente preservando los valores anteriores
-    })))
-  }
 
   useCalculateInitialWidth('menuButtonRef_initialWidth', setInitialWidth, menuButtonRef)
-  useCalculateMaxInitialWidth('loginComponentRef_initialWidth', setInitialWidth, loginComponentRef)
+  useCalculateInitialWidth('navOptionsRef_initialWidth', setInitialWidth, navOptionsRef)
 
-  // ------- counter of elements
-  const [optionCount, setOptionCount] = useState(0); // Estado para almacenar el conteo
+  // Combinar los efectos relacionados en uno solo y optimizar las dependencias
   useEffect(() => {
-    if (navElementsCount.current) {
-      const optionElements = navElementsCount.current.querySelectorAll('.option');
-      setOptionCount(Array.from(optionElements).length)
-    }
+    // 1. Calcular el conteo de opciones (solo si cambia headerContentRef_width)
+    const newOptionCount = navElementsCount.current
+      ? Array.from(navElementsCount.current.querySelectorAll('.option')).length
+      : 0;
 
-    setGeneralWidth(prev => ({
-      ...prev,
-      optionsElements: Number(optionCount)
-    }))
-    // console.log(optionCount);
+    // 2. Calcular los anchos
+    const threeElementsWidth = {
+      menuButton: Number(initialWidth.menuButtonRef_initialWidth) || 0,
+      navOption: Number(initialWidth.navOptionsRef_initialWidth) || 0,
+      loginComponent: Number(generalWidth?.loginButtonRef_initialWidth) || 0
+    };
 
-  }, [headerContentRef_width, initialWidth]);
+    const totalWidth = Object.values(threeElementsWidth).reduce((acc, curr) => acc + curr, 0);
+    // console.log({totalWidth})
+    const brokeThree = headerContentRef_width - (totalWidth + 20);
+    const broke = brokeThree <= 0 ? false : true;
 
-  // Calcula el ancho de los elementos del NavBar
-  useEffect(() => {
-    // console.log(generalWidth)
-    setInitialWidth(prev => ({
-      ...prev,
-      navOptionsRef_initialWidth: Number(navOptionsRef_width) || 0
-    }))
+    // 3. Actualizar el estado una sola vez con todos los cambios
+    setGeneralWidth(prev => {
+      // Evitar actualizaciones innecesarias
+      if (
+        prev.optionsElements === newOptionCount &&
+        prev.brokeThree === brokeThree &&
+        prev.broke === broke &&
+        prev.headerContentRef_width === headerContentRef_width
+      ) {
+        return prev;
+      }
 
-    const brokeTwo =
-      initialWidth.menuButtonRef_initialWidth +
-      initialWidth.navOptionsRef_initialWidth +
-      initialWidth.loginComponentRef_initialWidth +
-      (Number(generalWidth.brokeThree) || 0)
+      return {
+        ...prev,
+        optionsElements: newOptionCount,
+        brokeThree: Number(brokeThree) || 0,
+        broke,
+        headerContentRef_width
+      };
+    });
 
-    const brokeThree = headerContentRef_width - (brokeTwo + 20)
-    setGeneralWidth(e => ({ ...e, brokeThree: (Number(brokeThree) || 0) }));
-
-    const broke = brokeThree <= 0 ? false : true
-    setGeneralWidth({ broke })
-
-    setGeneralWidth(e => ({ ...e, headerContentRef_width }))
-
-    // console.log(`MenuBar ${initialWidth.menuButtonRef_initialWidth} / Options: ${initialWidth.navOptionsRef_initialWidth} / ${initialWidth.loginComponentRef_initialWidth}`)
-    // console.log(`brokeOne: ${headerContentRef_width} - brokeTwo: ${brokeTwo} = ${brokeThree}`)
   }, [
-    navOptionsRef_width,
+    // Reducir las dependencias a las esenciales
     headerContentRef_width,
-    initialWidth.navOptionsRef_width
+    initialWidth.menuButtonRef_initialWidth,
+    initialWidth.navOptionsRef_initialWidth,
+    generalWidth?.loginButtonRef_initialWidth
   ]);
+
+  const hasRole = (userRole, allowedRoles) => {
+    if (!userRole) return false;
+    return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
+  };
 
   return (<>
     <div className='headerContent' ref={headerContentRef}> {/* Absolute */}
@@ -100,21 +104,34 @@ export default function Header() {
               <MenuButton description='☰'></MenuButton>
             </div>
             <div ref={navElementsCount}>
-              {generalWidth.broke && // element 2 ----------
+              {generalWidth.broke &&
                 <ul className='navOptions' ref={navOptionsRef}>
                   <Link className='option' to={'home'}>
                     <OptionButton description='home'></OptionButton>
                   </Link>
-                  <Link className='option' to={'option1'}>
-                    <OptionButton description='option 1'></OptionButton>
-                  </Link>
                   <SearchButton description='🔍' id='searchButton'></SearchButton>
-                  <Link className='option' to={'option2'}>
-                    <OptionButton description='option 2'></OptionButton>
-                  </Link>
-                  <Link className='option' to={'option3'}>
-                    <OptionButton description='option 3'></OptionButton>
-                  </Link>
+
+                  {/* Option1 - solo admin */}
+                  {hasRole(userSession?.user?.role, ['admin']) && (
+                    <Link className='option' to={'option1'}>
+                      <OptionButton description='option 1'></OptionButton>
+                    </Link>
+                  )}
+
+                  {/* Option2 - admin o user */}
+                  {hasRole(userSession?.user?.role, ['admin', 'user']) && (
+                    <Link className='option' to={'option2'}>
+                      <OptionButton description='option 2'></OptionButton>
+                    </Link>
+                  )}
+
+                  {/* Option3 - solo admin */}
+                  {hasRole(userSession?.user?.role, ['admin']) && (
+                    <Link className='option' to={'option3'}>
+                      <OptionButton description='option 3'></OptionButton>
+                    </Link>
+                  )}
+
                 </ul>
               }
             </div>
@@ -123,8 +140,8 @@ export default function Header() {
               <Login />
             </div>
           </nav>
-        </div>
+        </div >
       }
-    </div>
+    </div >
   </>)
 }

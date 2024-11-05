@@ -15,12 +15,10 @@ export function MenuButton(props) {
   const handleModalState = () => {
     setAnimation(true)
     setTimeout(() => {
-      // setIsHovered(false)
       handleClick()
       setAnimation(false)
     }, 120)
   }
-
 
 
   return (

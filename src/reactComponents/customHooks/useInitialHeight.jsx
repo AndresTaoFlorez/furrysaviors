@@ -1,5 +1,10 @@
 import { useEffect, useRef } from 'react';
 
+/**
+ * @param {React.RefObject} elementRef - Referencia al elemento cuya altura se desea medir.
+ * @param {function} callback - Función opcional que se ejecuta con el valor de la altura inicial.
+ * @returns {number} - Altura inicial del elemento.
+ */
 const useInitialHeight = (elementRef, callback) => {
   const initialHeightRef = useRef(null);
 
