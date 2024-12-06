@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom'
 import useWidth from '../customHooks/useWidth'
 import useInitialWidth from '../customHooks/useInitialWidth'
 import useMaxInitialWidth from '../customHooks/useMaxInitialWidth'
-// import Modal from '../components/Modal'
 export default function Header() {
   const navOptionsRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -109,6 +108,7 @@ export default function Header() {
                   <Link className='option' to={'home'}>
                     <OptionButton description='home'></OptionButton>
                   </Link>
+
                   <SearchButton description='🔍' id='searchButton'></SearchButton>
 
                   {/* Option1 - solo admin */}

@@ -1,62 +1,62 @@
 import '../../style/reactComponentsStyle/SearchButton.scss'
 import { OptionButton } from "./OptionButton"
-import ModalTest from './Modal'
-import { useState, useRef } from 'react'
+import { Modal } from './Modal'
+import { useState, useEffect } from 'react'
 import useInitialHeight from '../customHooks/useInitialHeight'
 import useInitialWidth from '../customHooks/useInitialWidth'
 import useMaxInitialWidth from '../customHooks/useMaxInitialWidth'
 // importar contexto
 
 export function SearchButton(props) {
-  const [clickStatus, setClickStatus] = useState(false)
-  const [initialSize, setInitialSize] = useState({})
-  const searchButtonRef = useRef(null)
-  const searchButtonIconRef = useRef(null)
-
-  const [animation, setAnimation] = useState(false)
-
-  useInitialHeight(searchButtonIconRef, (height) => { setInitialSize(prev => ({ ...prev, searchButtonIconHeight: height })) })
-  useMaxInitialWidth(searchButtonIconRef, (width) => { setInitialSize(prev => ({ ...prev, searchButtonIconWidth: width })) })
-  useInitialHeight(searchButtonRef, (height) => { setInitialSize(prev => ({ ...prev, searchButtonHeight: height })) })
-  useInitialWidth(searchButtonRef, (width) => { setInitialSize(prev => ({ ...prev, searchButtonWidth: width })) })
+  // const [initialSize, setInitialSize] = useState({})
+  const [toggleLogin, setToggleLogin] = useState({
+    clickStatus: false,
+    animation: false
+  })
+  // const searchButtonRef = useRef(null)
+  // const searchButtonIconRef = useRef(null)
 
 
-  const handleClick = () => {
-    setClickStatus(!clickStatus)
-  }
-
-  const handleSearchBar = () => {
-    setAnimation(true)
-    setTimeout(() => {
-      // setIsHovered(false)
-      handleClick()
-      setAnimation(false)
-    }, 120)
-  }
+  // useInitialHeight(searchButtonIconRef, (height) => { setInitialSize(prev => ({ ...prev, searchButtonIconHeight: height })) })
+  // useMaxInitialWidth(searchButtonIconRef, (width) => { setInitialSize(prev => ({ ...prev, searchButtonIconWidth: width })) })
+  // useInitialHeight(searchButtonRef, (height) => { setInitialSize(prev => ({ ...prev, searchButtonHeight: height })) })
+  // useInitialWidth(searchButtonRef, (width) => { setInitialSize(prev => ({ ...prev, searchButtonWidth: width })) })
 
   return (
     <div className='searchButton'
-      style={{
-        '--searchButtonIconHeight': initialSize.searchButtonIconHeight + 'px',
-        '--searchButtonIconWidth': initialSize.searchButtonIconWidth + 'px'
-      }}
-      ref={searchButtonRef}
+    // style={{
+    //   '--searchButtonIconHeight': initialSize.searchButtonIconHeight + 'px',
+    //   '--searchButtonIconWidth': initialSize.searchButtonIconWidth + 'px'
+    // }}
+    // ref={searchButtonRef}
     >
-      {!clickStatus ?
-        <div className='searchButtonIcon' ref={searchButtonIconRef} onClick={() => setClickStatus(!clickStatus)}>
-          <OptionButton description={props.description}></OptionButton>
-        </div>
-        : ( // SEARCH BAR INPUT TO WRITE
-          <ModalTest setModalState={handleSearchBar} modalState={clickStatus}>
-            <div className={`searchButtonBar ${animation &&'searchButtonAnimation'}`}>
+      {
+        !toggleLogin.clickStatus ? (
+          <div
+            className='searchButtonIcon'
+            onClick={() => setToggleLogin(() => ({
+              clickStatus: true,
+              animation: true
+            }))}
+          >
+            <OptionButton description={props.description}></OptionButton>
+          </div>
+        ) : (
+          <Modal
+            setToggleLogin={setToggleLogin}
+            toggleLogin={toggleLogin}
+            duration={100}
+          >
+            <div className={`searchButtonBar ${!toggleLogin.animation && 'searchButtonAnimation'}`}>
               <input type="text" className="searchInput" placeholder='Search'
                 autoFocus
               />
-
             </div>
-          </ModalTest>
+          </Modal>
         )
       }
+
+
     </div>
   )
 }

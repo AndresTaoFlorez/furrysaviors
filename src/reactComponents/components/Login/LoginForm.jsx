@@ -1,9 +1,7 @@
-import { ModalContext } from "../Modal"
+import { Modal } from "../Modal"
 import { useState, useContext } from "react"
 import '../../../style/reactComponentsStyle/Login.scss'
 import { LoginContext } from "../../../reactComponents/context/LoginContext"
-
-
 
 const LoginForm = ({ setToggleLogin, toggleLogin }) => {
 
@@ -50,7 +48,7 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
   }
 
   return (
-    <ModalContext setToggleLogin={setToggleLogin} toggleLogin={toggleLogin}>
+    <Modal setToggleLogin={setToggleLogin} toggleLogin={toggleLogin}>
       <div className={`littleLogin ${!toggleLogin.animation ? 'littleLogin_animation_out' : ''}`}>
         <form className="login-container" onSubmit={handleSubmit}>
           <h1>Login</h1>
@@ -86,7 +84,7 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
           </button>
         </form>
       </div>
-    </ModalContext>
+    </Modal>
   )
 }
 

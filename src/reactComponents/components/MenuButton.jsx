@@ -1,15 +1,20 @@
 import { useState } from "react"
 import '../../style/reactComponentsStyle/MenuButton.scss'
-import ModalTest from './Modal'
+import { Modal } from './Modal'
 import { OptionButton } from "./OptionButton"
 
 export function MenuButton(props) {
   const description = props.description
-  const [clickStatus, setClickStatus] = useState(false)
-  const [animation, setAnimation] = useState(false)
+  const [toggleLogin, setToggleLogin] = useState({
+    animation: false,
+    clickStatus: false
+  })
 
   const handleClick = () => {
-    setClickStatus(!clickStatus)
+    setToggleLogin({
+      animation: true,
+      clickStatus: true
+    })
   }
 
   const handleModalState = () => {
@@ -23,10 +28,10 @@ export function MenuButton(props) {
 
   return (
     <div className="menuButtonContent">
-      {clickStatus ? (
-        <ModalTest modalState={clickStatus} setModalState={handleModalState}>
+      {toggleLogin.clickStatus ? (
+        <Modal setToggleLogin={setToggleLogin} toggleLogin={toggleLogin}>
           <div className="menuButtonBlock"></div>
-          <div className={`menuOptions ${animation && 'menuOptionsOut'}`}> {/*Contiene el Animation*/}
+          <div className={`menuOptions ${!toggleLogin.animation && 'menuOptionsOut'}`}> {/*Contiene el Animation*/}
             <h2>Menu Options</h2>
             <div className="menuOptionsList">
               <div className="optionMenuButton">option 1</div>
@@ -34,7 +39,7 @@ export function MenuButton(props) {
               <div className="optionMenuButton">option 3</div>
             </div>
           </div>
-        </ModalTest>
+        </Modal>
       ) : (<>
         <div className='menuButton'
           onClick={handleClick}>
