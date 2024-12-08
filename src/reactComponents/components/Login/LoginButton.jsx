@@ -2,7 +2,7 @@ import '../../../style/reactComponentsStyle/Login.scss'
 import { useState, useEffect, useRef, useContext } from "react"
 import useMaxInitialWidth from '../../../reactComponents/customHooks/useMaxInitialWidth'
 import { NavbarContext } from '../../../reactComponents/context/NavbarContext'
-import { LoginContext } from '../../../reactComponents/context/LoginContext'
+import { GlobalContext } from '../../context/GlobalContext'
 
 /**
  * @param {function} setClicStatus - Función para manejar el estado de clic.
@@ -15,7 +15,7 @@ const LoginButton = ({ setToggleLogin, toggleLogin, children }) => {
 
   // import context form navbar context
   const { setGeneralWidth } = useContext(NavbarContext)
-  const { userSession, setUserSession } = useContext(LoginContext)
+  const { userSession, setUserSession } = useContext(GlobalContext)
 
   useEffect(() => {
     setGeneralWidth(prev => ({
@@ -37,14 +37,12 @@ const LoginButton = ({ setToggleLogin, toggleLogin, children }) => {
     setToggleLogin({ clickStatus: true, animation: true })
   }
 
-  /**
-   * @param {Event} e - Evento de logout.
-   */
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUserToken')
     window.localStorage.removeItem('userSessionData')
     setToggleLogin({ clickStatus: false, animation: false })
     setUserSession({ user: null, token: null })
+
   }
   return (
     <>

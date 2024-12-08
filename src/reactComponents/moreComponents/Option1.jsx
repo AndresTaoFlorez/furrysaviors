@@ -1,15 +1,12 @@
 import '../../style/reactComponentsStyle/moreComponentsStyle/Option1.scss'
-import { LoginContext } from '../context/LoginContext'
-import RichText from './RichText.jsx'
+import { GlobalContext } from '../context/GlobalContext'
 import axios from 'axios'
-import JoditEditor from 'jodit-react'
 import { useState, useEffect, useRef, useContext } from 'react'
-import DOMPurify from "dompurify"
 import { Exception } from 'sass'
 
 export function Option1() {
 
-  const { userSession } = useContext(LoginContext)
+  const { userSession } = useContext(GlobalContext)
   const [items, setItems] = useState([])
   const richText = useRef(null)
 
@@ -105,7 +102,6 @@ export function Option1() {
       console.log(error)
     })
 
-
     getItems()
   }
 
@@ -155,29 +151,7 @@ export function Option1() {
     <div className="option1">
       <div className="option1_content">
         <div className="enter_text">
-
-          <div className="editable--capsule">
-            {change.expand ? (
-              <div className="editable--capsule--text--button" onClick={handleExpandText}>
-                <label>New note</label>
-              </div>
-            ) : (
-              <div className="editable--capsule--text--expanded">
-                {/* <div
-                  className='richtext'
-                  ref={richText}
-                  contentEditable="true"
-                  onPaste={() => handlePaste}
-                  onInput={handleContentChange}
-                  value={change.richText}
-                  autoFocus>
-                </div> */}
-                <RichText handleChange={handleContentChange}></RichText>
-                <button onClick={handleSave}>Save</button>
-                <button onClick={handleExpandText}>Exit</button>
-              </div>
-            )}
-          </div>
+          enter text
         </div>
         <div className="items">
           {items.length > 0 ? (

@@ -20,7 +20,8 @@ $primary-color: #19344638;
     width: 100%;
     height: 100vh;
 
-    .headerStickyContent { // sticky content
+    .headerStickyContent {
+      // sticky content
       position: sticky;
       z-index: 1;
       display: flex;
@@ -31,33 +32,38 @@ $primary-color: #19344638;
       flex-direction: row;
       justify-content: space-between;
 
-
       .floatingButtonBox:nth-child(1) {
         display: flex;
         // margin-left: 5%;
       }
 
-      .navOptions { // ul
+      .navOptions {
+        // ul
         display: flex;
         padding: 0;
         margin-top: 0;
         pointer-events: all;
 
+        .active div {
+          background: #e3d255 !important;
+        }
+
         li {
           margin-left: 20px;
-      
+
           a {
             color: white;
             text-decoration: none;
             font-size: 16px;
-      
+
             &:hover {
               color: lighten($primary-color, 20%);
             }
           }
         }
 
-        Link, a {
+        Link,
+        a {
           list-style: none;
           text-decoration-line: none;
         }
@@ -81,8 +87,7 @@ $primary-color: #19344638;
   }
 }
 
-
-// Use 
+// Use
 // pointer-events: all; // Permite seleccionar texto detras de otro elemento, como este
 
 // Use

@@ -1,7 +1,7 @@
 import { Modal } from "../Modal"
 import { useState, useContext } from "react"
 import '../../../style/reactComponentsStyle/Login.scss'
-import { LoginContext } from "../../../reactComponents/context/LoginContext"
+import { GlobalContext } from "../../context/GlobalContext"
 
 const LoginForm = ({ setToggleLogin, toggleLogin }) => {
 
@@ -15,7 +15,7 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
   /**
    * @type {Object} userSession - Estado del usuario logueado {user, token}.
    */
-  const { userSession, setUserSession } = useContext(LoginContext)
+  const { userSession, setUserSession } = useContext(GlobalContext)
 
   /**
      * @param {Event} e - Evento de input change.

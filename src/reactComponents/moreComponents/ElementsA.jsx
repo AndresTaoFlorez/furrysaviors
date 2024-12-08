@@ -18,7 +18,7 @@ export function ElementsA() {
     if (elementRef.current) {
       // Obtener los elementos hijos del contenedor
       const childElements = Array.from(elementRef.current.children);
-
+      
       // Mapear sobre los elementos hijos y obtener su offsetWidth
       const widths = childElements.map((element) => {
         return element ? element.offsetWidth : 0; // Evitar errores si algún elemento es null
