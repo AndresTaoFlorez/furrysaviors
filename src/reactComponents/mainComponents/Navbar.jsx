@@ -5,7 +5,7 @@ import { OptionButton } from '../components/OptionButton'
 import { SearchButton } from '../components/SearchButton'
 import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
-import useActiveClass from '../customHooks/useActiveClass'
+import { useActiveClass } from '../customHooks/useActiveClass'
 import { GlobalContext } from '../context/GlobalContext'
 
 
@@ -14,7 +14,6 @@ export default function Header() {
   const { userSession } = useContext(GlobalContext)
 
   const navOptionsRef = useRef(null);
-
 
   useActiveClass(navOptionsRef)
 

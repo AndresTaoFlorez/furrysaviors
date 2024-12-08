@@ -1,98 +1,99 @@
-import { useEffect, useContext, useRef } from 'react'
-import { GlobalContext } from '../context/GlobalContext'
+import { useLocation } from 'react-router-dom';
+import { useContext, useEffect, useRef, useCallback } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 
-const useActiveClass = (elementRef) => {
-  const { config, setConfig, userSession } = useContext(GlobalContext)
-  const handlersMap = useRef(new Map()) // Map para evitar duplicados de eventos
-  const mutationDebounceTimeout = useRef(null) // Controla la espera de mutaciones
+export const useActiveClass = (elementRef) => {
+  const location = useLocation();
+  const { setConfig } = useContext(GlobalContext);
+  const handlersMap = useRef(new Map());
+  const mutationDebounceTimeout = useRef(null);
 
-  const updateActiveClass = (index) => {
+  /**
+   * 🔥 Actualiza la clase activa en el elemento hijo clickeado
+   */
+  const updateActiveClass = useCallback((clickedChild) => {
     const element = elementRef.current;
     if (!element) return;
-  
-    const children = element.children;
-  
-    Array.from(children).forEach((child, i) => {
-      if (child.classList.contains('searchButton')) return;
-  
-      const isActive = i === index;
-      if (child.classList.contains('active') !== isActive) {
-        child.classList.toggle('active', isActive);
-      }
-  
-      const newId = isActive ? `active-child-${index}` : `child-${i}`;
-      if (child.id !== newId) {
-        child.id = newId;
-      }
-    });
-  
-    // Actualizamos el estado global solo si el índice ha cambiado
-    setConfig((prevConfig) => ({
-      ...prevConfig,
-      activeIndex: index,
-      currentUrl: window.location.pathname,
-    }));
-  };
-  
-  
-
-  const addClickListeners = () => {
-    const element = elementRef.current
-    if (!element) return
 
     const children = Array.from(element.children);
-    children.forEach((child, index) => {
-      if (child.classList.contains('searchButton')) return;
+    children.forEach((child) => {
+      child.classList.toggle('active', child === clickedChild);
+    });
+
+    const clickedIndex = children.indexOf(clickedChild);
+    setConfig((prevConfig) => ({
+      ...prevConfig,
+      activeIndex: clickedIndex,
+      currentUrl: location.pathname, // URL actual de la página
+    }));
+  }, [elementRef, setConfig, location.pathname]);
+
+  /**
+   * 📡 Agrega los listeners de clic a los hijos del elemento
+   */
+  const addClickListeners = useCallback(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    const children = Array.from(element.children);
+    children.forEach((child) => {
+      if (child.getAttribute('class') === 'searchButton') return
       if (!handlersMap.current.has(child)) {
-        const clickHandler = () => updateActiveClass(index);
-        handlersMap.current.set(child, clickHandler);
-        child.addEventListener('click', clickHandler);
+        const handler = () => updateActiveClass(child);
+        child.addEventListener('click', handler);
+        handlersMap.current.set(child, handler);
       }
     });
-  };
+  }, [elementRef, updateActiveClass]);
 
-  const removeClickListeners = () => {
-    handlersMap.current.forEach((clickHandler, child) => {
-      child.removeEventListener('click', clickHandler);
+  /**
+   * 🗑️ Elimina los listeners de clic de los hijos del elemento
+   */
+  const removeClickListeners = useCallback(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    const children = Array.from(element.children);
+    children.forEach((child) => {
+      const handler = handlersMap.current.get(child);
+      if (handler) {
+        child.removeEventListener('click', handler);
+        handlersMap.current.delete(child);
+      }
     });
-    handlersMap.current.clear();
-  };
+  }, [elementRef]);
 
+  /**
+   * 🛠️ Observa cambios en los hijos del elemento
+   */
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
+    // El MutationObserver observará cambios en los hijos del elemento
     const observerCallback = () => {
       clearTimeout(mutationDebounceTimeout.current);
       mutationDebounceTimeout.current = setTimeout(() => {
-        removeClickListeners()
-        addClickListeners()
-      }, 100)
-    }
+        // Primero eliminamos los listeners antiguos
+        removeClickListeners();
+        // Luego agregamos los nuevos listeners si hay nuevos hijos
+        addClickListeners();
+      }, 100); // Ajustamos el debounce para que no se ejecute en exceso
+    };
 
-    const observer = new MutationObserver(observerCallback)
-    observer.observe(element, { childList: true })
+    const observer = new MutationObserver(observerCallback);
+    observer.observe(element, { childList: true, subtree: true });
 
-    if (element.children.length > 1) {
-      addClickListeners()
-      updateActiveClass(config.activeIndex)
-      console.log(element.children.length)
-    }
+    // Aseguramos que los listeners iniciales se agreguen
+    addClickListeners();
 
+    // Cleanup cuando el componente se desmonte
     return () => {
-      observer.disconnect()
-      removeClickListeners()
-      clearTimeout(mutationDebounceTimeout.current)
-    }
+      observer.disconnect();
+      removeClickListeners();
+      clearTimeout(mutationDebounceTimeout.current);
+    };
+  }, [elementRef, addClickListeners, removeClickListeners]);
 
-  }, [elementRef])
-
-  useEffect(() => {
-    console.log(`token changin , index ${config.activeIndex}`);
-    updateActiveClass(config.activeIndex)
-  }, [config.activeIndex, userSession.token])
-
-  return config.activeIndex
-}
-
-export default useActiveClass
+  return null;
+};
