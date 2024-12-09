@@ -7,15 +7,20 @@ export const GlobalContext = createContext()
 export const GlobalContextProvider = ({ children }) => {
 
   // config, inicializa con valores por defecto
-  const [config, setConfig] = useState({
-    activeIndex: 0, // o cualquier valor por defecto
-    currentUrl: ''  // o cualquier valor por defecto
-  });
+  const storedUserSessionData = window.localStorage.getItem('userSessionData');
+  const parsedUserSessionData = storedUserSessionData ? JSON.parse(storedUserSessionData) : {};
+
+  const initialState = {
+    activeIndex: parsedUserSessionData.config?.activeIndex || 0, // Usa el operador de encadenamiento opcional
+    currentUrl: parsedUserSessionData.config?.currentUrl || '', // Usa el operador de encadenamiento opcional
+  };
+
+  const [config, setConfig] = useState(initialState);
 
   // usersSession
   const [userSession, setUserSession] = useState({
-    user: null,
-    token: null
+    user: JSON.parse(window.localStorage.getItem('userSessionData')) || null,
+    token: JSON.parse(window.localStorage.getItem('loggedUserToken')) || null
   });
 
   // Loading para saber el estado de la carga

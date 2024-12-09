@@ -21,7 +21,7 @@ export const useLoginContext = (userSession, setUserSession, isLoading, setIsLoa
     }
 
     verifySession()
-  }, [])
+  }, [userSession.token])
 
 
   // ... existing code ...

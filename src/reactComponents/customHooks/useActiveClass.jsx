@@ -1,15 +1,17 @@
-import { useLocation } from 'react-router-dom';
 import { useContext, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalContext';
+import { update } from '../../services.js/updateConfig';
 
 export const useActiveClass = (elementRef) => {
+  const { config, setConfig } = useContext(GlobalContext);
   const location = useLocation();
-  const { setConfig } = useContext(GlobalContext);
   const handlersMap = useRef(new Map());
   const mutationDebounceTimeout = useRef(null);
 
   /**
-   * 🔥 Actualiza la clase activa en el elemento hijo clickeado
+   * Updates the active class on the clicked child element
+   * @param {HTMLElement} clickedChild - The clicked child elementRe
    */
   const updateActiveClass = useCallback((clickedChild) => {
     const element = elementRef.current;
@@ -21,15 +23,18 @@ export const useActiveClass = (elementRef) => {
     });
 
     const clickedIndex = children.indexOf(clickedChild);
+
+    // Update config state
+
+    console.log('config: ' + config);
     setConfig((prevConfig) => ({
       ...prevConfig,
       activeIndex: clickedIndex,
-      currentUrl: location.pathname, // URL actual de la página
     }));
-  }, [elementRef, setConfig, location.pathname]);
+  }, [elementRef, setConfig]);
 
   /**
-   * 📡 Agrega los listeners de clic a los hijos del elemento
+   * Adds click event listeners to child elements
    */
   const addClickListeners = useCallback(() => {
     const element = elementRef.current;
@@ -37,7 +42,7 @@ export const useActiveClass = (elementRef) => {
 
     const children = Array.from(element.children);
     children.forEach((child) => {
-      if (child.getAttribute('class') === 'searchButton') return
+      if (child.getAttribute('class') === 'searchButton') return;
       if (!handlersMap.current.has(child)) {
         const handler = () => updateActiveClass(child);
         child.addEventListener('click', handler);
@@ -47,7 +52,7 @@ export const useActiveClass = (elementRef) => {
   }, [elementRef, updateActiveClass]);
 
   /**
-   * 🗑️ Elimina los listeners de clic de los hijos del elemento
+   * Removes click event listeners from child elements
    */
   const removeClickListeners = useCallback(() => {
     const element = elementRef.current;
@@ -64,36 +69,63 @@ export const useActiveClass = (elementRef) => {
   }, [elementRef]);
 
   /**
-   * 🛠️ Observa cambios en los hijos del elemento
+   * Observes changes in child elements
    */
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
-    // El MutationObserver observará cambios en los hijos del elemento
     const observerCallback = () => {
       clearTimeout(mutationDebounceTimeout.current);
       mutationDebounceTimeout.current = setTimeout(() => {
-        // Primero eliminamos los listeners antiguos
         removeClickListeners();
-        // Luego agregamos los nuevos listeners si hay nuevos hijos
         addClickListeners();
-      }, 100); // Ajustamos el debounce para que no se ejecute en exceso
+      }, 100); // Debounced to limit execution frequency
     };
 
     const observer = new MutationObserver(observerCallback);
     observer.observe(element, { childList: true, subtree: true });
 
-    // Aseguramos que los listeners iniciales se agreguen
     addClickListeners();
+    
+    const activeIndex = config.activeIndex
+    // actualizar el 
+    console.log(activeIndex)
 
-    // Cleanup cuando el componente se desmonte
     return () => {
       observer.disconnect();
       removeClickListeners();
       clearTimeout(mutationDebounceTimeout.current);
     };
-  }, [elementRef, addClickListeners, removeClickListeners]);
+  }, [elementRef]);
+
+  /**
+   * Updates the current URL in the config state on route change
+   */
+  useEffect(() => {
+    setConfig((prevConfig) => ({
+      ...prevConfig,
+      currentUrl: location.pathname,
+    }));
+    
+  }, [location.pathname, setConfig]);
+
+  /**
+   * useEffect para obtener el activeIndex después de que se actualice config
+   */
+  useEffect(() => {
+    const activeIndex = config?.activeIndex;
+    console.log("Active Index:", activeIndex); // Aquí obtienes el valor actualizado
+
+    const element = elementRef.current;
+    if (element) {
+      const children = Array.from(element.children);
+      const targetChild = children[activeIndex]; // Obtén el hijo correspondiente al activeIndex
+      if (targetChild) {
+        updateActiveClass(targetChild); // Llama a updateActiveClass con el hijo correspondiente
+      }
+    }
+  }, [config?.activeIndex, elementRef, updateActiveClass]); // Se ejecuta cada vez que activeIndex cambia
 
   return null;
 };
