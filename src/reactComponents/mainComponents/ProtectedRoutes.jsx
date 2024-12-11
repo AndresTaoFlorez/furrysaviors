@@ -20,7 +20,8 @@ const ProtectedRoutes = ({ userSession, isLoading, children, allowedRoles = [] }
 
   if (!isAuthorized) return <Navigate to="/home" />;
 
-  return children || <Outlet />;
+  // return children || <Outlet />;
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

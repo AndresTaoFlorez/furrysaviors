@@ -35,20 +35,7 @@ export function Option1() {
     }
     getItems()
   }, [userSession])
-
-
-  useEffect(() => {
-    if (richText.current) {
-      richText.current.focus()
-    }
-    console.log(change.richText)
-  }, [change])
-
-  const isImageUrl = (url) => {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
-    return imageExtensions.some(ext => url.toLowerCase().endsWith(ext));
-  }
-
+  
   //functions -----------------------------------------------
 
   const getItems = async () => {
@@ -67,85 +54,6 @@ export function Option1() {
     }
   }
 
-  const handleExpandText = () => {
-    setChange((prev) => ({
-      ...prev,
-      expand: !change.expand
-    }))
-  }
-
-  const handleContentChange = (newContent) => {
-
-    // const dirtyHtml = richText.current.innerHTML
-    // const preCleanHtml = DOMPurify.sanitize(dirtyHtml, { WHOLE_DOCUMENT: true })
-
-    // if (richText.current) {
-    //   setChange((prev) => ({
-    //     ...prev,
-    //     richText: cleanHtml
-    //   }))
-    // }
-
-    setChange((prev) => ({
-      ...prev,
-      richText: newContent
-    }))
-  }
-
-  const handleSave = async () => {
-    const html_content = change.richTexth
-    await axios.post('http://localhost:3001/api/notes/', { title: "untitle", html_content }, {
-      headers: {
-        Authorization: userSession.token
-      }
-    }).catch(error => {
-      console.log(error)
-    })
-
-    getItems()
-  }
-
-  const handleDelete = async (id) => {
-    console.log(id)
-    await axios.delete(`http://localhost:3001/api/notes/${id}`, {
-      headers: {
-        Authorization: userSession.token
-      }
-    }).catch(error => {
-      console.log(error)
-    })
-    console.log('delete')
-    getItems()
-  }
-
-  const handleCopy = (item) => async () => {
-    const htmlContent = item.html_content;
-    try {
-      // Copiar el contenido HTML al portapapeles
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          'text/html': new Blob([htmlContent], { type: 'text/html' }),
-          'text/plain': new Blob([htmlContent.replace(/(?:\r\n|\r|\n)/g, '\n')], { type: 'text/plain' })
-        })
-      ]);
-      console.log('Contenido copiado con formato HTML');
-    } catch (error) {
-      console.error('Error al copiar el contenido:', error);
-    }
-  }
-
-  const handlePaste = (e) => {
-    e.preventDefault();
-
-    const html = e.clipboardData.getData('text/html');
-    !html && exit()
-
-    sanitizedHtml = DOMPurify.sanitize(html)
-    setChange((prev) => ({
-      ...prev,
-      richText: sanitizedHtml
-    }))
-  };
 
   return (
     <div className="option1">
@@ -154,26 +62,9 @@ export function Option1() {
           enter text
         </div>
         <div className="items">
-          {items.length > 0 ? (
-            items.map((item, index) => (
-              <div className="note" key={index}>
-                <div className="note--title">
-                  <h1>{item.title}</h1><p>{item.id}</p>
-                  <div className="note--copy">
-                    <button className='note--copy--button' onClick={handleCopy(item)}>copy</button>
-                  </div>
-                </div>
-                <RichText></RichText>
-                {/* html content from data base */}
-                <div className='html_content' dangerouslySetInnerHTML={{ __html: item.html_content }} />
-                <button className='delete' onClick={() => handleDelete(item.id)}>Delete</button>
-              </div>
-            ))
-          ) : (
-            <div className="note--void">
-              <h1>no hay notas</h1>
-            </div>
-          )}
+          <div className="note--void">
+            <h1>no hay notas</h1>
+          </div>
         </div>
       </div>
     </div>

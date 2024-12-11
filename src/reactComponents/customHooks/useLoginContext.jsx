@@ -1,51 +1,57 @@
-import { useState, useEffect } from 'react'
-import { login, checkSessionService } from "../../services.js/login"
+import { useEffect } from 'react'
+import { getToken } from "../../services.js/login"
+import { getUser } from '../../services.js/user'
+import { isNil, isEmpty } from "lodash";
 
+/**
+ * 
+ * @param {*} setUserSession 
+ * @param {*} setIsLoading 
+ */
+export const useLoginContext = ({ setUserSession = () => { }, setIsLoading = () => { } }) => {
 
-export const useLoginContext = (userSession, setUserSession, isLoading, setIsLoading) => {
-
-
-  // 1. Actulizar lo más pronto posible el estado del userSession, solo si los datos están guardados en el localstorage
+  // Actualizar lo más pronto posible el estado del userSession y config, solo si los datos están guardados en el localstorage
   useEffect(() => {
     setIsLoading(true)
-
-    const verifySession = async () => {
+    const verifyLocalStorageToken = async () => {
       try {
-        const sessionData = await checkSessionService()
-        setUserSession(sessionData || { user: null, token: null })
+        // 1. verificar si existe un token en el localstorage
+        const token = getToken()
+
+        if (isEmpty(token)) {
+          // 3. si no es correcto, eliminar el token del localstorage y el userSession
+          window.localStorage.removeItem('userSessionData')
+          return
+        }
+        // 2. si existe un token, hacer la petición al server para validar que sea correcto
+        const response = await getUser(token)
+
+        if (isEmpty(response) || isNil(response)) {
+          window.localStorage.removeItem('loggedUserToken')
+          window.localStorage.removeItem('userSessionData')
+
+          console.log('token user was deleted');
+          setUserSession({ user: null, token: null })
+          return
+        }
+
+        const user = response.data
+        setUserSession({ user, token })
+
+
       } catch (error) {
-        console.error('Error al verificar la sesión:', error)
+        console.log(error);
+        window.localStorage.removeItem('userSessionData')
+        window.localStorage.removeItem('loggedUserToken')
+        console.log('error - data user was deleted');
+
+        return
       } finally {
-        setIsLoading(false) // Ensure loading state is updated in finally block
+        setIsLoading(false)
       }
     }
 
-    verifySession()
-  }, [userSession.token])
+    verifyLocalStorageToken()
+  }, [])
 
-
-  // ... existing code ...
-
-  useEffect(() => {
-    setIsLoading(true)
-    if (!userSession.user?.username || !userSession.user?.password) {
-      setIsLoading(false) // Ensure loading state is updated if no credentials
-      return
-    }
-
-    const loginSession = async () => {
-      try {
-        const { user, token } = await login(userSession.user.username, userSession.user.password)
-        setUserSession({ user, token } || { user: null, token: null })
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error)
-      } finally {
-        setIsLoading(false) // Ensure loading state is updated in finally block
-      }
-    }
-
-    loginSession()
-  }, [userSession.user])
-
-  // ... existing code ...
 }

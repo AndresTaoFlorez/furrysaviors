@@ -7,15 +7,31 @@ import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
 import { useActiveClass } from '../customHooks/useActiveClass'
 import { GlobalContext } from '../context/GlobalContext'
+import { useLocation } from 'react-router-dom';
+
 
 
 export default function Header() {
 
-  const { userSession } = useContext(GlobalContext)
+  const { userSession, config, setConfig } = useContext(GlobalContext)
 
   const navOptionsRef = useRef(null);
 
-  useActiveClass(navOptionsRef)
+  useActiveClass({
+    elementRef: navOptionsRef,
+    state: config,
+    setState: setConfig,
+    notChild: ['searchButton', 'home'],
+    stateAdditionalData: {
+      currentUrl: useLocation().pathname,
+    }
+  })
+
+  const hasRole = (allowedRoles) => {
+    const userRole = userSession?.user?.role;
+    if (!userRole) return;
+    return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
+  };
 
   return (<>
     <div className='headerContent'> {/* Absolute */}
@@ -27,28 +43,28 @@ export default function Header() {
           <div>
             <ul className='navOptions' ref={navOptionsRef}>  {/* Navcar Element Content */}
 
-              <Link className='option' to={'home'}>
+              <Link className='option' id='home' to={'home'}>
                 <OptionButton description='home'></OptionButton>
               </Link>
 
-              <SearchButton description='🔍' id='searchButton'></SearchButton>
+              <SearchButton description='🔍'></SearchButton>
 
               {/* Option1 - solo admin */}
-              {hasRole(userSession?.user?.role, ['admin']) && (
+              {hasRole(['admin']) && (
                 <Link className='option' to={'option1'}>
                   <OptionButton description='option 1'></OptionButton>
                 </Link>
               )}
 
               {/* Option2 - admin o user */}
-              {hasRole(userSession?.user?.role, ['admin', 'user']) && (
+              {hasRole(['admin', 'user']) && (
                 <Link className='option' to={'option2'}>
                   <OptionButton description='option 2'></OptionButton>
                 </Link>
               )}
 
               {/* Option3 - solo admin */}
-              {hasRole(userSession?.user?.role, ['admin']) && (
+              {hasRole(['admin']) && (
                 <Link className='option' to={'option3'}>
                   <OptionButton description='option 3'></OptionButton>
                 </Link>
@@ -66,9 +82,6 @@ export default function Header() {
   </>)
 }
 
-const hasRole = (userRole, allowedRoles) => {
-  if (!userRole) return false;
-  return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
-};
+
 
 

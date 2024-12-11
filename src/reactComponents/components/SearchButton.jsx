@@ -10,7 +10,7 @@ export function SearchButton(props) {
   })
 
   return (
-    <div className='searchButton'>
+    <div className='searchButton'  id='searchButton'>
       {
         !toggleLogin.clickStatus ? (
           <div

@@ -2,7 +2,6 @@ import '../../style/mainComponentsStyle/App.scss';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { Directions } from './Directions';
-import { GlobalContextProvider } from '../context/GlobalContext';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { NavbarProvider } from '../context/NavbarContext';
 // import AppProviders from './AppProviders';
@@ -11,7 +10,7 @@ import { NavbarProvider } from '../context/NavbarContext';
 export default function App() {
 
   return (
-    <GlobalContextProvider>
+    <>
       {process.env.NODE_ENV === 'development' ? (
         <BrowserRouter basename="/furrysaviors">
           <div className="App">
@@ -34,6 +33,6 @@ export default function App() {
         </HashRouter>
       )
       }
-    </GlobalContextProvider>
+    </>
   );
 }

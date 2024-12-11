@@ -1,5 +1,6 @@
 import { Modal } from "../Modal"
 import { useState, useContext } from "react"
+import {login} from '../../../services.js/login' 
 import '../../../style/reactComponentsStyle/Login.scss'
 import { GlobalContext } from "../../context/GlobalContext"
 
@@ -37,14 +38,17 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
     if (userSession.token) {  // el Token existe
       setFormData({ username: '', password: '' })
       handleHover({ handleStatus: toggleLogin.animation, setAnimation: setToggleLogin, setClicStatus: setToggleLogin })
-      console.log('El token existe')
       return
     }
     setToggleLogin((prev) => ({ ...prev, animation: false }))
     setTimeout(() => {
       setToggleLogin((prev) => ({ ...prev, clickStatus: false }))
     }, 200)
-    setUserSession({ user: formData, token: null })
+    const loginFunction = async (email, password) => {
+      const { user, token } = await login(email, password)
+      setUserSession({ user, token })
+    }
+    loginFunction(formData.username, formData.password)
   }
 
   return (

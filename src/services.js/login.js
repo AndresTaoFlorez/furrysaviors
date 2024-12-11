@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { isEmpty } from 'lodash'
 
 /**
  * @param {string} email
@@ -18,13 +19,21 @@ const login = async (email, password) => {
   }
 }
 
-const checkSessionService = async () => {
-  const token = await JSON.parse(window.localStorage.getItem('loggedUserToken'))
-  const user = await JSON.parse(window.localStorage.getItem('userSessionData'))
+const checkSessionService = () => {
+  const token = JSON.parse(window.localStorage.getItem('loggedUserToken'))
+  const user = JSON.parse(window.localStorage.getItem('userSessionData'))
   if (token && user) {
     return { token, user }
   }
   return null
+}
+
+const getToken = () => {
+  const token = JSON.parse(window.localStorage.getItem('loggedUserToken'))
+  if (isEmpty(token)) {
+    return null
+  }
+  return token
 }
 
 const setToken = (newToken) => {
@@ -36,4 +45,4 @@ const setUser = (newUser) => {
   window.localStorage.setItem('userSessionData', JSON.stringify(newUser))
 }
 
-export { login, setToken, checkSessionService, setUser }
+export { login, setToken, checkSessionService, setUser, getToken }

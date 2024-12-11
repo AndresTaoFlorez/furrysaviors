@@ -1,60 +1,100 @@
-import { useState } from 'react';
-import { useEffect } from "react";
-import { update, getConfig } from '../../services.js/updateConfig'
+import { useEffect, useRef } from "react";
+import { updateUser } from '../../services.js/user'
+import { checkSessionService } from '../../services.js/login'
+import { isNil, isEmpty, isEqual } from "lodash";
 
 /**
- * Custom hook para gestionar la configuración y la obtención de usuarios
- * @param {Object} config - Estado de configuración
- * @param {Function} setConfig - Función para actualizar la configuración
- * @param {Object} userSession - Sesión del usuario
- * @param {Function} setUserSession - Función para actualizar la sesión del usuario
- * @param {boolean} isLoading - Indicador de carga
- * @param {Function} setIsLoading - Función para actualizar el estado de carga
+ * Custom hook to manage configuration and user session
+ * @param {Object} config - Current configuration state
+ * @param {Function} setConfig - Function to update configuration
+ * @param {Object} userSession - User session object
+ * @param {Function} setUserSession - Function to update user session
+ * @param {boolean} isLoading - Loading indicator
+ * @param {Function} setIsLoading - Function to set loading state
+ * @param {Function} navigate - Navigation function
  */
-export const useConfigContext = (config, setConfig, userSession, setUserSession, isLoading, setIsLoading) => {
+export const useConfigContext = ({
+  config = {},
+  setConfig = () => { },
+  userSession = {},
+  isLoading = false,
+  setIsLoading = () => { },
+  navigate = () => { },
+  location = {}
+}) => {
 
-  // initialize config values from localstorge if exist
+  const prevConfig = useRef(config)
+  const prevPathname = useRef(location.pathname); // Controla la URL previa para evitar bucles infinitos
+
+  // Effect to update userSessionData in localStorage when config changes
   useEffect(() => {
+    if (!prevConfig.current) return
+    prevConfig.current = true
 
-    setIsLoading(true)
-    try {
-      const token = window.localStorage.getItem('loggedUserToken')
-      const parsedToken = JSON.parse(token)
-      const getConfigData = async () => {
-        const res = await getConfig(parsedToken);
-        const newConfig = userSession.user?.config
-        setConfig(newConfig)
-      }
-      getConfigData()
-    } catch (error) {
-      console.error('Error obteniendo userSessionData en localStorage:', error);
-    } finally {
-      setIsLoading(false)
-    }
-  }, [userSession]);
-
-  // update when config.currentUrl changes
-  useEffect(() => {
-    if (config && Object.keys(config).length > 0) { // Verificar que config no esté vacío
-      const updatedConfig = async () => {
-        const res = await update(config, userSession.token);
-        // console.log(res);
-      };
+    const syncUserData = async () => {
       try {
-        const userSessionData = window.localStorage.getItem('userSessionData');
-        if (userSessionData) {
-          const parsedUserSessionData = JSON.parse(userSessionData);
+        const loggedUserToken = JSON.parse(window.localStorage.getItem('loggedUserToken'))
+        const userSessionData = JSON.parse(window.localStorage.getItem('userSessionData'))
 
-          const newUser = parsedUserSessionData;
-          newUser.config = config
-          window.localStorage.setItem('userSessionData', JSON.stringify(newUser))
-          updatedConfig()
+        if (isNil(config) || isEmpty(config)) return
 
-        }
-      } catch (error) {
-        console.error('Error actualizando userSessionData en localStorage:', error);
+        userSessionData.config = config
+        window.localStorage.setItem('userSessionData', JSON.stringify(userSessionData))
+        await updateUser(config, loggedUserToken)
+      } catch { () => null }
+    }
+
+    syncUserData()
+  }, [config])
+
+  // Initialize config data
+  useEffect(() => {
+    setIsLoading(true)
+    if (prevConfig.current) return
+    prevConfig.current = true
+
+    const initializeData = () => {
+      try {
+        const userData = checkSessionService()
+        if (isNil(userData) || isEmpty(userData)) return
+
+        const { config } = userData.user
+        setConfig(config)
+      } catch { () => null }
+      finally {
+        setIsLoading(false)
       }
     }
-  }, [config?.currentUrl]); // Escuchar cambios en `config`
+
+    initializeData()
+  }, [])
+
+  useEffect(() => {
+    if (isNil(userSession) || isLoading) return;
+
+    const navigateToUserUrl = async () => {
+      try {
+        const userData = await checkSessionService();
+        if (isNil(userData) || isEmpty(userData)) return;
+
+        const newConfig = userData.user.config;
+        setConfig(newConfig);
+
+        if (isNil(newConfig) || isNil(location) || isEmpty(location) || isEqual(newConfig, location)) return;
+        if (isEqual(newConfig.currentUrl, location.pathname)) return;
+
+        const newUrl = "http://localhost:5173/furrysaviors" + newConfig.currentUrl;
+
+        if (isEqual(prevPathname.current, newUrl)) return;
+        navigate(newUrl);
+        console.log(`Navigating to: ${newUrl}`);
+      } catch (error) {
+        console.error("Error navegando a la URL del usuario", error);
+      }
+    };
+
+    navigateToUserUrl();
+  }, [userSession?.token]);
+
 
 };
