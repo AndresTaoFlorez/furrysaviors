@@ -1,4 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { isNil } from 'lodash'
+import { checkSessionService } from '../../services.js/login';
 
 /**
  * Componente que protege las rutas.
@@ -12,16 +14,19 @@ import { Navigate, Outlet } from 'react-router-dom';
 const ProtectedRoutes = ({ userSession, isLoading, children, allowedRoles = [] }) => {
   if (isLoading) return <div>Cargando...</div>; // Mostrar pantalla de carga
 
-  const userRoles = userSession?.user?.role 
-    ? userSession.user.role.split(',').map(role => role.trim()) 
-    : [];
+  const verifyUserRole = () => {
+    const sessionService = checkSessionService()
+    if (isNil(sessionService) || isNil(sessionService.user)) return false
+    const user = sessionService.user
+    const userRoles = user.role.split(',').map(role => role.trim());
 
-  const isAuthorized = userRoles.some(role => allowedRoles.includes(role));
-
-  if (!isAuthorized) return <Navigate to="/home" />;
-
-  // return children || <Outlet />;
-  return <Outlet />;
+    const isAuthorized = userRoles.some(role => allowedRoles.includes(role));
+    return isNil(isAuthorized) ? false : true
+  }
+  
+  if (verifyUserRole()) return children || <Outlet />
+  return <Navigate to="/home"></Navigate>;
 };
 
 export default ProtectedRoutes;
+

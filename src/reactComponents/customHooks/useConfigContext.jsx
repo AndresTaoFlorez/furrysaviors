@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useEffect, useRef } from "react";
 import { updateUser } from '../../services.js/user'
 import { checkSessionService } from '../../services.js/login'
@@ -19,35 +20,46 @@ export const useConfigContext = ({
   userSession = {},
   isLoading = false,
   setIsLoading = () => { },
+  setCurrentUrl = () => { },
+  currentUrl = '',
   navigate = () => { },
   location = {}
 }) => {
 
   const prevConfig = useRef(config)
-  const prevPathname = useRef(location.pathname); // Controla la URL previa para evitar bucles infinitos
 
   // Effect to update userSessionData in localStorage when config changes
   useEffect(() => {
+
     if (!prevConfig.current) return
     prevConfig.current = true
 
     const syncUserData = async () => {
       try {
-        const loggedUserToken = JSON.parse(window.localStorage.getItem('loggedUserToken'))
-        const userSessionData = JSON.parse(window.localStorage.getItem('userSessionData'))
+
+        const userData = checkSessionService()
+        if (isNil(userData) || isEmpty(userData)) return
+
+        const loggedUserToken = userData.token
+        const userSessionData = userData.user
 
         if (isNil(config) || isEmpty(config)) return
 
-        userSessionData.config = config
+        if (currentUrl.currentUrl === "/home") return
+        const newConfig = { ...config, ...currentUrl }
+
+        userSessionData.config = newConfig
+        console.log(userSessionData.config);
+
         window.localStorage.setItem('userSessionData', JSON.stringify(userSessionData))
-        await updateUser(config, loggedUserToken)
+        await updateUser(newConfig, loggedUserToken)
       } catch { () => null }
     }
 
     syncUserData()
-  }, [config])
+  }, [config, currentUrl])
 
-  // Initialize config data
+  // Initialize config data when page loads
   useEffect(() => {
     setIsLoading(true)
     if (prevConfig.current) return
@@ -75,21 +87,17 @@ export const useConfigContext = ({
     const navigateToUserUrl = async () => {
       try {
         const userData = await checkSessionService();
-        if (isNil(userData) || isEmpty(userData)) return;
+
+        if (isNil(config) || isEmpty(userData)) return;
 
         const newConfig = userData.user.config;
         setConfig(newConfig);
 
-        if (isNil(newConfig) || isNil(location) || isEmpty(location) || isEqual(newConfig, location)) return;
-        if (isEqual(newConfig.currentUrl, location.pathname)) return;
+        // if (isNil(location) || isEmpty(location) || isEqual(config, location)) return;
+        // if (isEqual(prevPathname.current, config.currentUrl)) return;
 
-        const newUrl = "http://localhost:5173/furrysaviors" + newConfig.currentUrl;
-
-        if (isEqual(prevPathname.current, newUrl)) return;
-        navigate(newUrl);
-        console.log(`Navigating to: ${newUrl}`);
       } catch (error) {
-        console.error("Error navegando a la URL del usuario", error);
+        // console.error("Error navegando a la URL del usuario", error);
       }
     };
 

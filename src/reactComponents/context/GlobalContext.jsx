@@ -15,17 +15,19 @@ export const GlobalContextProvider = ({ children }) => {
     token: ''
   });
 
+  const [currentUrl, setCurrentUrl] = useState('')
+
   // Loading para saber el estado de la carga
   const [isLoading, setIsLoading] = useState(true);
 
   // incluir funcionalidad de ConfigContext
-  useConfigContext({ config, setConfig, userSession, isLoading, setIsLoading })
+  useConfigContext({ config, setConfig, userSession, isLoading, setIsLoading, currentUrl, setCurrentUrl })
 
   // incluir funcionalidad de LoginContext
   useLoginContext({ setUserSession, setIsLoading });
 
   return (
-    <GlobalContext.Provider value={{ userSession, setUserSession, config, setConfig, isLoading, setIsLoading }}>
+    <GlobalContext.Provider value={{ userSession, setUserSession, config, setConfig, isLoading, setIsLoading, currentUrl, setCurrentUrl }}>
       {children}
     </GlobalContext.Provider>
   )

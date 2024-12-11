@@ -8,14 +8,28 @@ import { Option2 } from '../moreComponents/Option2';
 import { Option3 } from '../moreComponents/Option3';
 import ProtectedRoutes from './ProtectedRoutes';
 import { useConfigContext } from '../customHooks/useConfigContext';
+import { isEmpty, isNil } from 'lodash';
 
 
 export function Directions() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { userSession, isLoading } = useContext(GlobalContext);
+  const { userSession, isLoading, setCurrentUrl, currentUrl } = useContext(GlobalContext);
 
-  useConfigContext({ navigate, location })
+  useEffect(() => {
+    if (isNil(location) || isEmpty(location.pathname)) return;
+    setCurrentUrl((prev)=>({...prev, currentUrl: location.pathname}));
+    // console.log(location.pathname);
+    if(isNil(currentUrl) || isEmpty(currentUrl)) return
+    // console.log('currentUrl', currentUrl);
+  }, [location])
+
+  useEffect(() => {
+    if (isNil(isLoading) || isNil(userSession) || isEmpty(userSession.token) || isNil(userSession.user.config)) return;
+    
+    // console.log(userSession.user.config);
+    navigate(userSession.user.config.currentUrl)
+  }, [userSession?.token, isLoading])
 
   return (
     // Definición de las rutas

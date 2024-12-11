@@ -21,10 +21,7 @@ export default function Header() {
     elementRef: navOptionsRef,
     state: config,
     setState: setConfig,
-    notChild: ['searchButton', 'home'],
-    stateAdditionalData: {
-      currentUrl: useLocation().pathname,
-    }
+    notChild: ['searchButton', 'home']
   })
 
   const hasRole = (allowedRoles) => {
