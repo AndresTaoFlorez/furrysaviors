@@ -1,8 +1,9 @@
 import { Modal } from "../Modal"
 import { useState, useContext } from "react"
-import {login} from '../../../services.js/login' 
+import { login } from '../../../services.js/login'
 import '../../../style/reactComponentsStyle/Login.scss'
 import { GlobalContext } from "../../context/GlobalContext"
+import { isBad } from "../../../services.js/dataVerify"
 
 const LoginForm = ({ setToggleLogin, toggleLogin }) => {
 
@@ -16,7 +17,7 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
   /**
    * @type {Object} userSession - Estado del usuario logueado {user, token}.
    */
-  const { userSession, setUserSession } = useContext(GlobalContext)
+  const { userSession, setUserSession, setIsLoading } = useContext(GlobalContext)
 
   /**
      * @param {Event} e - Evento de input change.
@@ -35,7 +36,8 @@ const LoginForm = ({ setToggleLogin, toggleLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (userSession.token) {  // el Token existe
+    setIsLoading(true)
+    if (!isBad(userSession?.token)) {  // el Token existe
       setFormData({ username: '', password: '' })
       handleHover({ handleStatus: toggleLogin.animation, setAnimation: setToggleLogin, setClicStatus: setToggleLogin })
       return

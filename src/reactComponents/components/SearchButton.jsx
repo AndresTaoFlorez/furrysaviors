@@ -3,14 +3,14 @@ import { OptionButton } from "./OptionButton"
 import { Modal } from './Modal'
 import { useState } from 'react'
 
-export function SearchButton(props) {
+export function SearchButton({ description }) {
   const [toggleLogin, setToggleLogin] = useState({
     clickStatus: false,
     animation: false
   })
 
   return (
-    <div className='searchButton'  id='searchButton'>
+    <div className='searchButton' id='searchButton'>
       {
         !toggleLogin.clickStatus ? (
           <div
@@ -20,7 +20,7 @@ export function SearchButton(props) {
               animation: true
             }))}
           >
-            <OptionButton description={props.description}></OptionButton>
+            <OptionButton description={description}></OptionButton>
           </div>
         ) : (
           <Modal

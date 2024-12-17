@@ -7,47 +7,68 @@ import { Option1 } from '../moreComponents/Option1';
 import { Option2 } from '../moreComponents/Option2';
 import { Option3 } from '../moreComponents/Option3';
 import ProtectedRoutes from './ProtectedRoutes';
+import { isBad } from '../../services.js/dataVerify';
+import { checkSessionService, getCurrentUrl, setUrlFromServer } from '../../services.js/login';
 import { useConfigContext } from '../customHooks/useConfigContext';
-import { isEmpty, isNil } from 'lodash';
-
+import { isEqual, isEqualWith, update } from 'lodash';
 
 export function Directions() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { userSession, isLoading, setCurrentUrl, currentUrl } = useContext(GlobalContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userSession, isLoading, setIsLoading, menuOptions, currentUrl, setCurrentUrl, setConfig, setUserSession } = useContext(GlobalContext);
+  const { updateAllConfigData } = useConfigContext({ menuOptions, setUserSession, setConfig, navigate })
 
   useEffect(() => {
-    if (isNil(location) || isEmpty(location.pathname)) return;
-    setCurrentUrl((prev)=>({...prev, currentUrl: location.pathname}));
-    // console.log(location.pathname);
-    if(isNil(currentUrl) || isEmpty(currentUrl)) return
-    // console.log('currentUrl', currentUrl);
-  }, [location])
+    const userData = checkSessionService()
+    if (isBad(userData, { secondLeve: true })) return
+    setCurrentUrl(location.pathname);
+  }, [location.pathname]); // Escuchar cambios en token y pathname
 
+
+  // validar con el checkSessioniService en lugar del userSession
   useEffect(() => {
-    if (isNil(isLoading) || isNil(userSession) || isEmpty(userSession.token) || isNil(userSession.user.config)) return;
-    
-    // console.log(userSession.user.config);
-    navigate(userSession.user.config.currentUrl)
-  }, [userSession?.token, isLoading])
+    const userData = checkSessionService()
+    if (isBad(userData, { secondLeve: true })) return
+    const serverUrl = userData.user.config.currentUrl
+    const userFromServer = getCurrentUrl()
+    if (isBad(userFromServer)) {
+      setUrlFromServer({ url: serverUrl })
+      navigate(serverUrl)
+      console.log('logged: ', serverUrl);
+      return
+    } else {
+      if (location.pathname) {
+        // console.log({ currentUrl, pathname: location.pathname });
+        // cuando es null o /home
+        if (currentUrl === '/home' || currentUrl === null) {
+          // console.log('to', { pathname: location.pathname });
+          navigate(location.pathname)
+          // updateAllConfigData({ newUrl: location.pathname, oldUrl: currentUrl })
+        }
+      }
+    }
+
+    // console.log(`different to ${userData.user.config.currentUrl} from server`);
+  }, [currentUrl, userSession?.token])
 
   return (
-    // Definición de las rutas
     <Routes>
       <Route index element={<ContentBody />} />
-      <Route path="/home" element={<ContentBody />} />
-      {/* Check if user exists and has roles */}
+      <Route path={menuOptions?.option0} element={<ContentBody />} />
+
+      {/* Protected routes for admin */}
       <Route element={<ProtectedRoutes userSession={userSession} isLoading={isLoading} allowedRoles={['admin']} />}>
-        <Route path="/option1" element={<Option1 />} />
-        <Route path="/option3" element={<Option3 />} />
+        <Route path={menuOptions?.option1} element={<Option1 />} />
+        <Route path={menuOptions?.option3} element={<Option3 />} />
       </Route>
+
+      {/* Protected routes for admin and user */}
       <Route element={<ProtectedRoutes userSession={userSession} isLoading={isLoading} allowedRoles={['admin', 'user']} />}>
-        <Route path="/option2" element={<Option2 />} />
+        <Route path={menuOptions?.option2} element={<Option2 />} />
       </Route>
-      {/* Agregar ruta para manejar páginas no encontradas */}
-      <Route path="*" element={<Navigate to="/home" />} />
+
+      {/* Redirect for any unmatched route */}
+      <Route path="*" element={<Navigate to={menuOptions?.option0} />} />
     </Routes>
-
-
   );
 }

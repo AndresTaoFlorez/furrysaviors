@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { isEmpty } from 'lodash'
+import { isBad } from './dataVerify'
 
 /**
  * @param {string} email
@@ -28,6 +29,25 @@ const checkSessionService = () => {
   return null
 }
 
+const setUrlFromServer = ({ url }) => {
+  window.localStorage.setItem('currentUrl', JSON.stringify(url))
+}
+const getCurrentUrl = () => {
+  try {
+    const url = JSON.parse(window.localStorage.getItem('currentUrl'))
+    if (isBad(url)) {
+      return null
+    }
+    return url
+  } catch (error) {
+    // Manejo de errores, puedes agregar un log o una acción específica aquí
+    return null
+  }
+}
+const deleteCurrentUrl = () => {
+  window.localStorage.removeItem('currentUrl')
+}
+
 const getToken = () => {
   const token = JSON.parse(window.localStorage.getItem('loggedUserToken'))
   if (isEmpty(token)) {
@@ -45,4 +65,19 @@ const setUser = (newUser) => {
   window.localStorage.setItem('userSessionData', JSON.stringify(newUser))
 }
 
-export { login, setToken, checkSessionService, setUser, getToken }
+const deleteUserAndToken = () => {
+  window.localStorage.removeItem('loggedUserToken')
+  window.localStorage.removeItem('userSessionData')
+}
+
+export {
+  login,
+  setToken,
+  checkSessionService,
+  setUser,
+  getToken,
+  deleteUserAndToken,
+  setUrlFromServer,
+  getCurrentUrl,
+  deleteCurrentUrl
+}

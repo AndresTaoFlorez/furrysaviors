@@ -1,84 +1,78 @@
 import '../../style/mainComponentsStyle/Navbar.scss'
-import { useRef, useContext } from 'react'
+import { useRef, useContext, useState, useEffect, useMemo } from 'react'
 import { MenuButton } from '../components/MenuButton'
 import { OptionButton } from '../components/OptionButton'
 import { SearchButton } from '../components/SearchButton'
+import { useActiveClass } from '../customHooks/useActiveClass'
 import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
-import { useActiveClass } from '../customHooks/useActiveClass'
 import { GlobalContext } from '../context/GlobalContext'
-import { useLocation } from 'react-router-dom';
+import { isBad } from '../../services.js/dataVerify'
 
-
-
-export default function Header() {
-
-  const { userSession, config, setConfig } = useContext(GlobalContext)
-
+const Navbar = () => {
+  const { userSession, config, setConfig, changeToThisIndex, menuOptions, currentUrl } = useContext(GlobalContext)
   const navOptionsRef = useRef(null);
+  const [additionalConfig, setAdditionalConfig] = useState(null)
 
-  useActiveClass({
+  useEffect(() => {
+    setAdditionalConfig({ currentUrl })
+  }, [currentUrl])
+
+  const options = useMemo(() => ({
     elementRef: navOptionsRef,
-    state: config,
-    setState: setConfig,
-    notChild: ['searchButton', 'home']
-  })
+    config,
+    setConfig,
+    additionalConfig,
+    notChild: ['searchButton'],
+    changeToThisIndex
+  }), [additionalConfig, config, navOptionsRef]);
+
+  useActiveClass(options);
 
   const hasRole = (allowedRoles) => {
     const userRole = userSession?.user?.role;
-    if (!userRole) return;
+    if (!userRole) return false;
     return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
   };
 
-  return (<>
-    <div className='headerContent'> {/* Absolute */}
-      <div className='headerRelativeContent'> {/* Relative */}
+  return (  
+    <div className='headerContent'>
+      <div className='headerRelativeContent'>
         <nav className='headerStickyContent'>
-          <div className='menuButtonBox'> {/* element 1 ---------- */}
-            <MenuButton description='☰'></MenuButton>
+          <div className='menuButtonBox'>
+            <MenuButton description='☰' />
           </div>
-          <div>
-            <ul className='navOptions' ref={navOptionsRef}>  {/* Navcar Element Content */}
+          <div className='navOptions' ref={navOptionsRef}>
+            <Link className='option' to={menuOptions?.option0}>
+              <OptionButton id={menuOptions?.option0} description={menuOptions?.option0} />
+            </Link>
+            <SearchButton description='🔍' />
 
-              <Link className='option' id='home' to={'home'}>
-                <OptionButton description='home'></OptionButton>
+            {(hasRole(['admin']) && !isBad(userSession)) && (
+              <Link className='option' to={menuOptions?.option1}>
+                <OptionButton id={menuOptions?.option1} description={menuOptions?.option1} />
               </Link>
+            )}
 
-              <SearchButton description='🔍'></SearchButton>
+            {(hasRole(['admin', 'user']) && !isBad(userSession)) && (
+              <Link className='option' to={menuOptions?.option2}>
+                <OptionButton id={menuOptions?.option2} description={menuOptions?.option2} />
+              </Link>
+            )}
 
-              {/* Option1 - solo admin */}
-              {hasRole(['admin']) && (
-                <Link className='option' to={'option1'}>
-                  <OptionButton description='option 1'></OptionButton>
-                </Link>
-              )}
-
-              {/* Option2 - admin o user */}
-              {hasRole(['admin', 'user']) && (
-                <Link className='option' to={'option2'}>
-                  <OptionButton description='option 2'></OptionButton>
-                </Link>
-              )}
-
-              {/* Option3 - solo admin */}
-              {hasRole(['admin']) && (
-                <Link className='option' to={'option3'}>
-                  <OptionButton description='option 3'></OptionButton>
-                </Link>
-              )}
-
-            </ul>
+            {(hasRole(['admin']) && !isBad(userSession)) && (
+              <Link className='option' to={menuOptions?.option3}>
+                <OptionButton id={menuOptions?.option3} description={menuOptions?.option3} />
+              </Link>
+            )}
           </div>
           <div className='loginComponent'>
-            {/* element 3 ---------- */}
             <Login />
           </div>
         </nav>
-      </div >
-    </div >
-  </>)
+      </div>
+    </div>
+  )
 }
 
-
-
-
+export default Navbar

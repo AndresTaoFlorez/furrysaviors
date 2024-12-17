@@ -3,8 +3,7 @@ import '../../style/reactComponentsStyle/MenuButton.scss'
 import { Modal } from './Modal'
 import { OptionButton } from "./OptionButton"
 
-export function MenuButton(props) {
-  const description = props.description
+export function MenuButton({ description }) {
   const [toggleLogin, setToggleLogin] = useState({
     animation: false,
     clickStatus: false

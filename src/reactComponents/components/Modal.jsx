@@ -2,14 +2,9 @@ import { useCallback, useEffect } from 'react';
 import '../../style/reactComponentsStyle/Modal.scss'
 
 /**
- * @param {function} setModalState - Función para manejar el estado de clic.
- * @param {boolean} modalState - Estado de clic.
- */
-
-
-/**
- * @param {function} setToggleLogin - Función para manejar el estado de clic.
- * @param {Object} toggleLogin - Estado de clic.
+ * @param {function} param.setToggleLogin - Función para manejar el estado de clic.
+ * @param {Object} param.toggleLogin - Estado de clic.
+ * @param {Number} param.duration  - optional - timeour of togglelogin-bvg
  * @throws {Error} - Si no se proporciona una función setToggleLogin o un objeto toggleLogin.
  */
 export const Modal = ({ children, setToggleLogin, toggleLogin, duration = 200 }) => {

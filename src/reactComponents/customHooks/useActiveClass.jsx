@@ -1,142 +1,79 @@
-import { useEffect, useRef, useState, useCallback, useInsertionEffect } from 'react'
-import { isEqual, isEmpty, isNil } from 'lodash';
+import { indexOf, set, update } from 'lodash';
+import { useEffect, useRef, useState } from 'react';
+import { useGetChilds } from './useGetChilds';
+import { isBad } from '../../services.js/dataVerify';
+
 
 /**
- * This custom hook allows adding the 'active' class to the child elements of a reference when they are clicked. Additionally, it updates the state provided as a parameter, setting its   activeIndex property to the indexOf value corresponding to the child of the reference that was clicked. In other words, it assigns a click event to all the children of the reference so that, when any of them are clicked, the 'active' class is added to them, and the state is updated with the index of the selected element.
- * @param {*} elementRef ref element
- * @param {*} state 
- * @param {Function} setState 
- * @param {Array} notChild Array of strings with the child's id that should not be considered as children
- * @param {Object} stateAdditionalData Aditional values (object) to agregate to the 'state' that was passed as parameter
- * @returns 
+ * Custom hook to manage the active class for children of a reference element.
+ * It allows you to set the "active" class on a child element and remove it from others.
+ * The hook also handles click events to update the active class dynamically.
+ * 
+ * @param {object} params - Configuration parameters.
+ * @param {import('react').RefObject} params.elementRef - The reference to the parent element whose children will have the active class updated.
+ * @param {Array} params.notChild - List of children to exclude from being considered.
+ * @param {function} params.setConfig - Function to update configuration.
+ * @param {object|null} params.additionalConfig - Additional configuration for custom behavior.
  */
 export const useActiveClass = ({
-  elementRef = null,
-  state = {},
-  setState = () => { },
+  elementRef = { current: null },
+  config = {},
+  setConfig = () => { },
   notChild = [],
-  stateAdditionalData = {}
+  additionalConfig = null,
 }) => {
 
-  const handlersMap = useRef(new Map())
-  const mutationDebounceTimeout = useRef(null)
+  const [childIndex, setChildIndex] = useState(config?.activeIndex)
 
   /**
-   * Updates the active class on the clicked child element
-   * @param {HTMLElement} clickedChild - The clicked child elementRe
+   * get total childs from elementRef.current and update active class
+   * when click on child
    */
-  const updateActiveClass = useCallback((clickedChild) => {
-    const element = elementRef.current
-    if (!element) return
-
-    const children = Array.from(element.children)
-    children.forEach((child) => {
-      child.classList.toggle('active', child === clickedChild)
-    })
-
-    const clickedIndex = children.indexOf(clickedChild)
-
-    // hay que quitar esto
-    // if (stateAdditionalData.currentUrl === '/home') return
-    // Update state state
-    setState((prevState) => ({
-      ...prevState,
-      ...stateAdditionalData,
-      activeIndex: clickedIndex
-    }))
-  }, [elementRef])
-
-  /**
-   * Updates the active class when state changes
-   * @param {HTMLElement} children - The clicked child elementRe
-   */
-  const initializedClassChild = useCallback((children) => {
-    const element = elementRef.current
-
-    if (isNil(element) || isNil(children)) return
-    const elements = Array.from(element.children)
-    elements.forEach((child) => {
-      child.classList.toggle('active', child === children)
-    })
-  }, [elementRef])
-
-  /**
-   * Adds click event listeners to child elements
-   */
-  const addClickListeners = useCallback(() => {
-    const element = elementRef.current
-    if (!element) return
-
-    const children = Array.from(element.children)
-    children.forEach((child) => {
-      if (notChild.some(id => child.id.includes(id))) return
-      if (!handlersMap.current.has(child)) {
-        const handler = () => updateActiveClass(child)
-        child.addEventListener('click', handler)
-        handlersMap.current.set(child, handler)
-      }
-    })
-
-  }, [elementRef])
-
-  /**
-   * Removes click event listeners from child elements
-   */
-  const removeClickListeners = useCallback(() => {
-    const element = elementRef.current
-    if (!element) return
-
-    const children = Array.from(element.children)
-    children.forEach((child) => {
-      const handler = handlersMap.current.get(child)
-      if (handler) {
-        child.removeEventListener('click', handler)
-        handlersMap.current.delete(child)
-      }
-    })
-  }, [elementRef])
-
-  /**
-   * Observes changes in child elements and initilized when page loads the first time
-   */
-  useEffect(() => {
-    const element = elementRef.current
-    if (!element) return
-
-    const observerCallback = () => {
-      clearTimeout(mutationDebounceTimeout.current)
-      mutationDebounceTimeout.current = setTimeout(() => {
-        removeClickListeners()
-        addClickListeners()
-      }, 100) // Debounced to limit execution frequency
+  useGetChilds({
+    refElement: elementRef,
+    notChild,
+    events: {
+      click: (e) => { updateActiveClass(e.target.parentElement, elementRef) }
     }
-
-    const observer = new MutationObserver(observerCallback)
-    observer.observe(element, { childList: true, subtree: true })
-
-    addClickListeners()
-
-    return () => {
-      observer.disconnect()
-      removeClickListeners()
-      clearTimeout(mutationDebounceTimeout.current)
-    }
-  }, [elementRef])
+  });
 
   /**
-   * Update the active class when state and stateAdditionalData changes
+   * This function updates the "active" class on a single child of `elementRef.current`.
+   * 
+   * @param {HTMLElement} targetElement - The element to which the "active" class will be added.
+   * @param {import('react').RefObject} elementRef - The reference to the container whose children will be updated.
    */
+  const updateActiveClass = (targetElement, elementRef, withoutState = true) => {
+    if (isBad(elementRef?.current)) return
+    Array.from(elementRef?.current.children).forEach((child) => {
+      child?.classList.remove('active');
+    });
+    targetElement?.classList.add('active');
+    const currentIndex = indexOf(elementRef?.current.children, targetElement);
+    if (withoutState) { setChildIndex(currentIndex) }
+  }
+
+  /**
+   * 
+   * @param {*} index 
+   */
+  const handleStateConfig = (index) => {
+    setConfig(() => {
+      return isBad(additionalConfig, { secondLevel: true })
+        ? { activeIndex: index }
+        : { activeIndex: index, ...additionalConfig };
+    });
+  };
+
+  // Update the state using the handleStateConfig function whenever additionalConfig or childIndex changes.
   useEffect(() => {
+    handleStateConfig(childIndex)
+  }, [additionalConfig, childIndex])
 
-    const element = elementRef.current
-
-    if (isNil(element) || isEmpty(state)) return
-
-    const children = Array.from(element.children)
-
-    initializedClassChild(children[state.activeIndex])
-
-  }, [state, stateAdditionalData])
-
-
-}
+  // update child active class from server data about activeindex
+  useEffect(() => {
+    if (isBad(config, elementRef.current)) return
+    const targetElement = elementRef.current.children[config.activeIndex];
+    updateActiveClass(targetElement, elementRef, false);
+  }, [elementRef, config])
+};

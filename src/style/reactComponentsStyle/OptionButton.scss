@@ -1,7 +1,6 @@
-
 $backgroundColor: #2f99b9ad;
 $backgroundColor: #3ec0e783;
-$backgroundColor: #3FA2F6;
+$backgroundColor: #3fa2f6;
 
 $menu-btn-size: 1.5em;
 
@@ -9,7 +8,8 @@ $menu-btn-size: 1.5em;
 $buttonWidth: fit-content;
 $buttonHeight: fit-content;
 
-.buttonOptionComponent { // <Button>
+.buttonOptionComponent {
+  // <Button>
   display: flex;
   margin: 0 2px;
   background: $backgroundColor;
@@ -33,25 +33,20 @@ $buttonHeight: fit-content;
     user-select: none;
     transition: all 100ms ease-in-out;
   }
-  
-}
+  &:hover {
+    height: calc($buttonHeight + ($buttonHeight * 0.1));
+    width: calc($buttonWidth + 2px);
+    background: #3ebfe7;
+    border-radius: 0 0 5px 5px;
+    cursor: pointer;
 
-.growingOptionButton { // when hover on <Button>
-  height: calc($buttonHeight + ($buttonHeight * 0.1));
-  width: calc($buttonWidth + 2px);
-  background: #3ebfe7;
-  border-radius: 0 0 5px 5px;
-  cursor: pointer;
-
-  .button {
-    font-size: calc($menu-btn-size + 2px);
-    color: #212121;
-
+    .button {
+      font-size: calc($menu-btn-size + 2px);
+      color: #212121;
+    }
   }
-
   &:active {
     scale: 1.02;
     filter: brightness(0.9);
-
   }
 }

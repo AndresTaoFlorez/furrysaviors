@@ -1,0 +1,28 @@
+.Loading {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: #2d3a5c;
+  transition: all 100ms;
+  align-items: center;
+  justify-content: center;
+
+  .circle {
+    border: 8px solid #f3f3f3; /* Color de fondo */
+    border-top: 8px solid #3498db; /* Color de la parte visible */
+    border-radius: 50%; /* Hace el círculo */
+    width: 50px; /* Tamaño del spinner */
+    height: 50px; /* Tamaño del spinner */
+    animation: spin 1s linear infinite; /* Animación para girar */
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); /* Empieza sin rotación */
+  }
+  100% {
+    transform: rotate(360deg); /* Rota completamente */
+  }
+}

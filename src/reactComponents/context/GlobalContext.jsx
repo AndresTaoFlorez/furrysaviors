@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from 'react'
-import { checkSessionService } from '../../services.js/login'
+import { deleteCurrentUrl, deleteUserAndToken } from '../../services.js/login'
 import { useConfigContext } from '../customHooks/useConfigContext';
 import { useLoginContext } from '../customHooks/useLoginContext';
 
@@ -8,26 +8,66 @@ export const GlobalContext = createContext()
 export const GlobalContextProvider = ({ children }) => {
 
   const [config, setConfig] = useState({});
+  const [changeToThisIndex, setChangeToThisIndex] = useState({})
 
-  // usersSession
   const [userSession, setUserSession] = useState({
     user: '',
     token: ''
   });
 
-  const [currentUrl, setCurrentUrl] = useState('')
+  const [currentUrl, setCurrentUrl] = useState(null)
+  const [menuOptions, setMenuOptions] = useState({
+    option0: 'home',
+    option1: 'option1',
+    option2: 'option2',
+    option3: 'option3',
+  })
 
-  // Loading para saber el estado de la carga
+  const deleteSessionData = () => {
+    deleteUserAndToken()
+    setUserSession(null)
+    setConfig(null)
+    setCurrentUrl(null)
+    deleteCurrentUrl()
+  }
+
   const [isLoading, setIsLoading] = useState(true);
 
-  // incluir funcionalidad de ConfigContext
-  useConfigContext({ config, setConfig, userSession, isLoading, setIsLoading, currentUrl, setCurrentUrl })
+  useConfigContext({
+    config,
+    setConfig,
+    userSession,
+    setUserSession,
+    isLoading,
+    setIsLoading,
+    currentUrl,
+    setChangeToThisIndex,
+    setMenuOptions,
+    deleteSessionData
+  })
 
-  // incluir funcionalidad de LoginContext
   useLoginContext({ setUserSession, setIsLoading });
 
+  const GlobalContextValues = {
+    config,
+    setConfig,
+    userSession,
+    setUserSession,
+    isLoading,
+    setIsLoading,
+    currentUrl,
+    setCurrentUrl,
+    changeToThisIndex,
+    setChangeToThisIndex,
+    menuOptions,
+    setMenuOptions,
+    deleteSessionData
+  }
+
   return (
-    <GlobalContext.Provider value={{ userSession, setUserSession, config, setConfig, isLoading, setIsLoading, currentUrl, setCurrentUrl }}>
+    <GlobalContext.Provider
+      value={GlobalContextValues}
+    >
       {children}
     </GlobalContext.Provider>
   )

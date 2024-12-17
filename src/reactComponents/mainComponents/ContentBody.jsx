@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import '../../style/mainComponentsStyle/ContentBody.scss'
+import { GlobalContext } from "../context/GlobalContext"
 
 export default function ContentBody() {
-  const [results] = useState([])
 
   return (<>
     <div className="homePage">
@@ -14,13 +14,6 @@ export default function ContentBody() {
     </div>
     <div className="contentBodyContent">
       <h1>ContentBody</h1>
-      {results.map((result, index) => (
-        <div className="contentBodyCard" key={index}>
-          
-          <h1>Title</h1>
-          <div>{result.content}</div>
-        </div>
-      ))}
     </div>
   </>)
 }

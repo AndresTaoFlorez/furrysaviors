@@ -1,58 +1,46 @@
 import '../../../style/reactComponentsStyle/Login.scss'
-import { useState, useEffect, useRef, useContext } from "react"
+import { useRef, useContext } from "react"
+import { isBad } from '../../../services.js/dataVerify'
+import { deleteUserAndToken } from '../../../services.js/login'
 import useMaxInitialWidth from '../../../reactComponents/customHooks/useMaxInitialWidth'
-import { NavbarContext } from '../../../reactComponents/context/NavbarContext'
 import { GlobalContext } from '../../context/GlobalContext'
+import { useConfigContext } from '../../customHooks/useConfigContext'
 
 /**
  * @param {function} setClicStatus - Función para manejar el estado de clic.
  * @param {function} setAnimation - Función para manejar el estado de animación.
  * @param {function} handleHover - Función para manejar el estado de hover.
  */
-const LoginButton = ({ setToggleLogin, toggleLogin, children }) => {
+const LoginButton = ({ setToggleLogin, children }) => {
   const loginButtonRef = useRef(null);
-  const [initialWidth, setInitialWidth] = useState({})// Initial width of some refered elements
 
   // import context form navbar context
-  const { setGeneralWidth } = useContext(NavbarContext)
-  const { userSession, setUserSession } = useContext(GlobalContext)
+  const { userSession, setUserSession, setConfig } = useContext(GlobalContext)
+  const { deleteConfig } = useConfigContext({ setConfig });
 
-  useEffect(() => {
-    setGeneralWidth(prev => ({
-      ...prev,
-      loginButtonRef_initialWidth: Number(initialWidth.loginButtonRef_initialWidth) || 0
-    }))
-  }, [initialWidth])
-
-  const useCalculateInitialWidth = (key, setElementSomething, elementRef) => {
-    useMaxInitialWidth(elementRef, (width) => setElementSomething(prev => ({
-      ...prev,
-      [key]: width || 0 // Actualiza correctamente preservando los valores anteriores
-    })))
-  }
-
-  useCalculateInitialWidth('loginButtonRef_initialWidth', setInitialWidth, loginButtonRef)
 
   const handleClick = () => {
     setToggleLogin({ clickStatus: true, animation: true })
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedUserToken')
-    window.localStorage.removeItem('userSessionData')
+    deleteUserAndToken()
     setToggleLogin({ clickStatus: false, animation: false })
     setUserSession({ user: null, token: null })
+    deleteConfig()
 
   }
   return (
     <>
-      {userSession.token ? (
+      {!isBad(userSession?.token) ? (
+        // session logged
         <div className="logged">
           <p>Welcome</p>
           <p className='username'>{userSession.user?.name}</p>
           <button className="button-logout" onClick={handleLogout}>Logout</button>
         </div>
       ) : (
+        // session no logged until
         <div ref={loginButtonRef} className='loginImage' onClick={handleClick}>
           {children}
           <img src="https://img.icons8.com/?size=100&id=7rcs0z3sdioE&format=png&color=000000" alt="user icon" />
