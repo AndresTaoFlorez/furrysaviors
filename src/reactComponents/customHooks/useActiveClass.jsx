@@ -1,5 +1,5 @@
-import { indexOf, set, update } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { get, indexOf, set, update } from 'lodash';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGetChilds } from './useGetChilds';
 import { isBad } from '../../services.js/dataVerify';
 
@@ -23,19 +23,23 @@ export const useActiveClass = ({
   additionalConfig = null,
 }) => {
 
-  const [childIndex, setChildIndex] = useState(config?.activeIndex)
+  const [childIndex, setChildIndex] = useState(-1)
 
   /**
    * get total childs from elementRef.current and update active class
    * when click on child
    */
-  useGetChilds({
+  const { removeActiveElements, elementState } = useGetChilds({
     refElement: elementRef,
     notChild,
     events: {
-      click: (e) => { updateActiveClass(e.target.parentElement, elementRef) }
+      click: (e) => { (isBad(config, { secondLevel: true })) ? {} : handleActiveClass(e.target.parentElement, elementRef) }
     }
   });
+
+  useEffect(() => {
+    console.log(config);
+  }, [config])
 
   /**
    * This function updates the "active" class on a single child of `elementRef.current`.
@@ -43,7 +47,7 @@ export const useActiveClass = ({
    * @param {HTMLElement} targetElement - The element to which the "active" class will be added.
    * @param {import('react').RefObject} elementRef - The reference to the container whose children will be updated.
    */
-  const updateActiveClass = (targetElement, elementRef, withoutState = true) => {
+  const handleActiveClass = useCallback((targetElement, elementRef, withoutState = true) => {
     if (isBad(elementRef?.current)) return
     Array.from(elementRef?.current.children).forEach((child) => {
       child?.classList.remove('active');
@@ -51,7 +55,7 @@ export const useActiveClass = ({
     targetElement?.classList.add('active');
     const currentIndex = indexOf(elementRef?.current.children, targetElement);
     if (withoutState) { setChildIndex(currentIndex) }
-  }
+  }, [config])
 
   /**
    * 
@@ -65,6 +69,15 @@ export const useActiveClass = ({
     });
   };
 
+  // Remove the "active" class from all children when the component is unmounted or when the `notChild` list changes.
+  useEffect(() => {
+    // if (isBad(config)) { removeActiveClass(elementRef) }
+    if (isBad(config)) {
+      removeActiveElements()
+      setChildIndex(-1)
+    }
+  }, [elementState, config, elementRef, childIndex])
+
   // Update the state using the handleStateConfig function whenever additionalConfig or childIndex changes.
   useEffect(() => {
     handleStateConfig(childIndex)
@@ -74,6 +87,6 @@ export const useActiveClass = ({
   useEffect(() => {
     if (isBad(config, elementRef.current)) return
     const targetElement = elementRef.current.children[config.activeIndex];
-    updateActiveClass(targetElement, elementRef, false);
+    handleActiveClass(targetElement, elementRef, false);
   }, [elementRef, config])
 };

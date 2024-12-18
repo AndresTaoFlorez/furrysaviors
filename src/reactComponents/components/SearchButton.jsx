@@ -26,7 +26,7 @@ export function SearchButton({ description }) {
           <Modal
             setToggleLogin={setToggleLogin}
             toggleLogin={toggleLogin}
-            duration={100}
+            duration={200}
           >
             <div className={`searchButtonBar ${!toggleLogin.animation && 'searchButtonAnimation'}`}>
               <input type="text" className="searchInput" placeholder='Search'

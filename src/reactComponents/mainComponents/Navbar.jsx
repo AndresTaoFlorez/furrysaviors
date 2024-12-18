@@ -27,7 +27,7 @@ const Navbar = () => {
     changeToThisIndex
   }), [additionalConfig, config, navOptionsRef]);
 
-  useActiveClass(options);
+  useActiveClass(userSession?.token ? options : { elementRef: navOptionsRef, });
 
   const hasRole = (allowedRoles) => {
     const userRole = userSession?.user?.role;
@@ -35,7 +35,7 @@ const Navbar = () => {
     return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
   };
 
-  return (  
+  return (
     <div className='headerContent'>
       <div className='headerRelativeContent'>
         <nav className='headerStickyContent'>
@@ -43,25 +43,25 @@ const Navbar = () => {
             <MenuButton description='☰' />
           </div>
           <div className='navOptions' ref={navOptionsRef}>
-            <Link className='option' to={menuOptions?.option0}>
+            <Link to={menuOptions?.option0}>
               <OptionButton id={menuOptions?.option0} description={menuOptions?.option0} />
             </Link>
             <SearchButton description='🔍' />
 
             {(hasRole(['admin']) && !isBad(userSession)) && (
-              <Link className='option' to={menuOptions?.option1}>
+              <Link to={menuOptions?.option1}>
                 <OptionButton id={menuOptions?.option1} description={menuOptions?.option1} />
               </Link>
             )}
 
             {(hasRole(['admin', 'user']) && !isBad(userSession)) && (
-              <Link className='option' to={menuOptions?.option2}>
+              <Link to={menuOptions?.option2}>
                 <OptionButton id={menuOptions?.option2} description={menuOptions?.option2} />
               </Link>
             )}
 
             {(hasRole(['admin']) && !isBad(userSession)) && (
-              <Link className='option' to={menuOptions?.option3}>
+              <Link to={menuOptions?.option3}>
                 <OptionButton id={menuOptions?.option3} description={menuOptions?.option3} />
               </Link>
             )}

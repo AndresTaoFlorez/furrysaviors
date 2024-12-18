@@ -38,7 +38,6 @@ $primary-color: #19344638;
       }
 
       .navOptions {
-        // ul
         display: flex;
         padding: 0;
         margin-top: 0;
@@ -66,6 +65,7 @@ $primary-color: #19344638;
         a {
           list-style: none;
           text-decoration-line: none;
+          height: fit-content;
         }
       }
 

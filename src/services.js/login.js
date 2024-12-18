@@ -3,22 +3,48 @@ import { isEmpty } from 'lodash'
 import { isBad } from './dataVerify'
 
 /**
- * @param {string} email
- * @param {string} password
- * @returns {Promise<Object>}
+ * 
+ * @param {*} email 
+ * @param {*} password 
+ * @param {*} retries 
+ * @param {*} delay 
+ * @returns 
  */
-const login = async (email, password) => {
-  try {
-    const { data } = await axios.post('http://localhost:3001/api/auth/login', { email, password })
-    if (data.token && data.user) {
-      window.localStorage.setItem('loggedUserToken', JSON.stringify(data.token))
-      window.localStorage.setItem('userSessionData', JSON.stringify(data.user))
-      return { user: data.user, token: data.token }
+const login = async (email, password, retries = 5, delay = 300) => {
+  let attempt = 0;
+
+  const tryLogin = async () => {
+    try {
+      const { data } = await axios.post('http://localhost:3001/api/auth/login', { email, password });
+
+      // Verifica si la respuesta contiene los datos esperados
+      if (data.token && data.user) {
+        window.localStorage.setItem('loggedUserToken', JSON.stringify(data.token));
+        window.localStorage.setItem('userSessionData', JSON.stringify(data.user));
+        return { user: data.user, token: data.token };
+      } else {
+        throw new Error('Invalid server response');
+      }
+    } catch (error) {
+      attempt++;
+      if (attempt >= retries) {
+        throw { 
+          message: 'Maximum retries reached. Unable to login.', 
+          res: error, 
+          status: error.response?.status || 500, 
+          email: null, 
+          password: null 
+        };
+      }
+
+      console.log(`Retrying login... Attempt ${attempt} of ${retries}`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return tryLogin();
     }
-  } catch (error) {
-    throw { message: 'Wrong password', res: error, status: 401, email: null, password: null }
-  }
-}
+  };
+
+  return tryLogin();
+};
 
 const checkSessionService = () => {
   const token = JSON.parse(window.localStorage.getItem('loggedUserToken'))

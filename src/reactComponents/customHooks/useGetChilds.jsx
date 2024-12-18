@@ -18,12 +18,37 @@ import { isBad } from '../../services.js/dataVerify';
 export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) => {
   const [elementState, setElementState] = useState([]);
   const mutationDebounceTimeout = useRef(null);
+  const eventHandlersRef = useRef({});
+
+
+  const removeActiveElements = () => {
+    const element = refElement?.current;
+    if (element) {
+      Array.from(element.children).forEach(child => {
+        if (child.classList.contains('active')) {
+          child.classList.remove('active');  // Eliminar la clase "active"
+          // También podemos eliminar los eventos asociados a estos elementos.
+          Object.entries(events).forEach(([eventType, callback]) => {
+            if (typeof callback === 'function') {
+              const eventHandler = eventHandlersRef.current[`${child.id}-${eventType}`];
+              if (eventHandler) {
+                child.removeEventListener(eventType, eventHandler); // Eliminar el evento
+                delete eventHandlersRef.current[`${child.id}-${eventType}`]; // Limpiar la referencia
+              }
+            }
+          });
+        }
+      });
+    }
+  };
+
 
   useEffect(() => {
     const element = refElement?.current;
 
     if (!element || !(element instanceof HTMLElement)) {
       console.log('El elemento no es un nodo DOM', element);
+      removeActiveElements()
       return;
     }
 
@@ -91,5 +116,5 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
     };
   }, [refElement]);
 
-  return elementState;
+  return {elementState,removeActiveElements};
 };

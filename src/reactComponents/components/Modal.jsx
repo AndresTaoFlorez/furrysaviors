@@ -2,10 +2,21 @@ import { useCallback, useEffect } from 'react';
 import '../../style/reactComponentsStyle/Modal.scss'
 
 /**
- * @param {function} param.setToggleLogin - Función para manejar el estado de clic.
- * @param {Object} param.toggleLogin - Estado de clic.
- * @param {Number} param.duration  - optional - timeour of togglelogin-bvg
- * @throws {Error} - Si no se proporciona una función setToggleLogin o un objeto toggleLogin.
+ * Modal component that manages a toggleable login modal with animations.
+ * 
+ * @param {Object} param - The props for the component.
+ * 
+ * @param {Object} param.toggleLogin - The state object that controls the modal's behavior.
+ * @param {boolean} param.toggleLogin.animation - Controls the animation status of the modal (true = active, false = inactive).
+ * @param {boolean} param.toggleLogin.clickStatus - Indicates if the modal is currently "clicked" or active.
+ * 
+ * @param {function} param.setToggleLogin - Function to update the `toggleLogin` state. It must update the `animation` and `clickStatus` properties.
+ * 
+ * @param {Number} [param.duration=200] - Optional. The timeout (in milliseconds) for the modal toggle animation.
+ * 
+ * @param {React.ReactNode} param.children - The child components to be displayed inside the modal.
+ * 
+ * @throws {Error} - If `setToggleLogin` is not a function or if `toggleLogin` is not an object with the required properties.
  */
 export const Modal = ({ children, setToggleLogin, toggleLogin, duration = 200 }) => {
   const handleModal = () => {
