@@ -18,16 +18,21 @@ const Navbar = () => {
     setAdditionalConfig({ currentUrl })
   }, [currentUrl])
 
-  const options = useMemo(() => ({
-    elementRef: navOptionsRef,
-    config,
-    setConfig,
-    additionalConfig,
-    notChild: ['searchButton'],
-    changeToThisIndex
-  }), [additionalConfig, config, navOptionsRef]);
+  const options = useMemo(() => {
+    const dependencies = userSession?.token ? {
+      config,
+      setConfig,
+      additionalConfig,
+      changeToThisIndex
+    } : {}
+    const essentialConfig = {
+      elementRef: navOptionsRef,
+      notChild: ['searchButton', 'home'],
+    }
+    return { ...dependencies, ...essentialConfig }
+  }, [additionalConfig, config, navOptionsRef]);
 
-  useActiveClass(userSession?.token ? options : { elementRef: navOptionsRef, });
+  useActiveClass(options);
 
   const hasRole = (allowedRoles) => {
     const userRole = userSession?.user?.role;

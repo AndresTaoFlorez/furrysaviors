@@ -95,4 +95,53 @@ const excludeProperty = (obj, propToExclude) => {
   }, {});
 };
 
-export { whoIsBad, isAnyBad, isBad, excludeProperty };
+
+/**
+ * 
+ * @param  {...any} fns 
+ * @param  {...Function} param.fns function to test
+ * @param  {boolean} param.native false to arrow functions and true to native functions 
+ * @returns 
+ */
+const isFunction = (...fns) => {
+  const native = typeof fns[fns.length - 1] === 'boolean' ? fns.pop() : false;
+  
+  return fns.every(fn => {
+    // Verifica que sea una función
+    if (typeof fn !== 'function') return false;
+    
+    // Obtiene la definición de la función como cadena de texto
+    const functionString = Function.prototype.toString.call(fn); // Usar Function.prototype.toString para evitar errores con funciones nativas
+
+    if (native) {
+      // Verifica que no sea una función nativa
+      if (/^\s*function\s*\w*\s*\([^)]*\)\s*{\s*\[native code\]\s*}\s*$/.test(functionString)) return false;
+
+      // Verifica que la longitud de la función sea significativa
+      const strippedFunction = functionString.replace(/\s/g, '');
+      if (strippedFunction.length <= 15) return false; // Ajusta el umbral para la longitud mínima
+    } else {
+      // Si se permite la función nativa, verifica si está "vacía"
+      const strippedFunction = functionString.replace(/\s/g, '');
+      if (strippedFunction.length <= 15) return false; // Verifica si la longitud de la función es muy pequeña
+    }
+
+    return true;
+  });
+};
+
+
+
+
+
+
+
+
+
+export {
+  whoIsBad,
+  isAnyBad,
+  isBad,
+  excludeProperty,
+  isFunction
+};

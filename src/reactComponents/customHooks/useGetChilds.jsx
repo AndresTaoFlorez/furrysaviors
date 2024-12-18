@@ -20,7 +20,6 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
   const mutationDebounceTimeout = useRef(null);
   const eventHandlersRef = useRef({});
 
-
   const removeActiveElements = () => {
     const element = refElement?.current;
     if (element) {
@@ -58,7 +57,9 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
      */
     const getUpdatedChilds = () => {
       return Array.from(element.children)
-        .filter(child => !notChild.includes(child.id)) // Excluir hijos
+        .filter(child => {
+          return !notChild.includes(child.id)
+        }) // Excluir hijos
         .map((child) => {
           // Asignar eventos si existen
           if (events && typeof events === 'object') {
@@ -116,5 +117,5 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
     };
   }, [refElement]);
 
-  return {elementState,removeActiveElements};
+  return { childs: elementState, removeActiveElements };
 };
