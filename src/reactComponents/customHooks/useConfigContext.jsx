@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { useEffect, useRef } from "react";
 import { getUser, updateUser } from '../../services.js/user'
-import { checkSessionService, setUser, deleteUserAndToken } from '../../services.js/login'
-import { isAnyBad, isBad } from '../../services.js/dataVerify'
-import { isNil, isEmpty, isEqual, isDate } from "lodash";
+import { checkSessionService, setUser } from '../../services.js/login'
+import { isBad } from '../../services.js/dataVerify'
+import {isEqual } from "lodash";
 
 /**
  * Custom hook to manage configuration and user session
@@ -26,7 +25,9 @@ export const useConfigContext = ({
   setChangeToThisIndex = () => { },
   setUserSession = () => { },
   menuOptions = {},
-  deleteSessionData = () => { }
+  deleteSessionData = () => { },
+  newIndex = {},
+  setNewIndex = () => { },
 }) => {
 
   // config state ref to get latest value
@@ -82,31 +83,26 @@ export const useConfigContext = ({
     const oldConfig = userData.user.config
 
     const currentIndex = changeIndex({ newUrl, menuOptions }) // fix this funcions !!!
-    console.log({ newUrl, oldUrl, currentIndex });
 
 
-    if (isNil(currentIndex) || currentIndex === oldConfig.activeIndex) return
+    if (isBad(currentIndex) || currentIndex === oldConfig.activeIndex) return
     const newConfig = { activeIndex: currentIndex, currentUrl: newUrl }
     user.config = newConfig
 
+    // console.log('to', { pathname: newUrl, index: currentIndex });
+
     // set on localStorage the newUrl and the newIndex
     setUser(user)
-    // set on userSession State the newUrl and the newIndex
+    // set on server the newUrl and the newIndex
     setUserSession((prev) => ({
       ...prev,
       user
     }))
-
     await updateUser(newConfig, token)
-    // 5. update the config in the server
-    // 6. update the config in the config state
     setConfig(newConfig)
+    // set on userSession State the newUrl and the newIndex
+    // set on config State the newUrl and the newIndex
 
-    // 7. update state to update child class
-
-    // setChangeToThisIndex({ index: currentIndex });
-
-    console.log('navigate to:', newUrl);
     navigate(newUrl)
   }
 
@@ -116,10 +112,13 @@ export const useConfigContext = ({
     const lastSegment = newUrl.split('/').pop(); // 'option1', 'option2', ...
     const entries = Object.entries(menuOptions);
     const entry = entries.find(([key, value]) => value === lastSegment);
+    const index = entries.indexOf(entry)
     const key = entry ? entry[0] : null; // Devuelve la llave o null si no se encuentra
-    return key; // Cambiado para devolver la llave
+    return index; // Cambiado para devolver la llave
   };
 
+
+  // try to update the child index from here - childIndex
 
   // Effect to update userSessionData in localStorage when config changes
   useEffect(() => {
@@ -148,7 +147,6 @@ export const useConfigContext = ({
         // send config state data to server
 
         const verifySession = async () => {
-          const userData = checkSessionService()
           if (isBad(userData)) return
           const response = await getUser(userData.token)
 

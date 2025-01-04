@@ -9,17 +9,23 @@ import { isBad, isFunction } from '../../services.js/dataVerify';
  * It allows you to set the "active" class on a child element and remove it from others.
  * The hook also handles click events to update the active class dynamically.
  * 
- * @param {object} params - Configuration parameters.
- * @param {import('react').RefObject} params.elementRef - The reference to the parent element whose children will have the active class updated.
- * @param {Array} params.notChild - List of children to exclude from being considered.
- * @param {function} params.setConfig - Function to update configuration.
- * @param {object|null} params.additionalConfig - Additional configuration for custom behavior.
+ * @param {import('react').RefObject} prop.elementRef - The reference to the parent element whose children will have the active class updated.
+ * @param {object} prop.config - The configuration object that includes the active index.
+ * @param {function} prop.setConfig - Function to update configuration.
+ * @param {Array} prop.notChild - List of children to exclude from being considered.
+ * @param {object} prop.events - Event listeners to add to the children.
+ * @param {number} prop.depth - The depth level to consider when getting the children.
+ * @param {object|null} prop.additionalConfig - Additional configuration for custom behavior.
+ * 
+ * @return {Function} updateActiveClass - Function to update the active class on a child element.
  */
 export const useActiveClass = ({
-  elementRef = { current: null },
+  elementRef = {},
   config = {},
   setConfig = () => { },
   notChild = [],
+  events = {},
+  depth = 1,
   additionalConfig = null,
 }) => {
 
@@ -29,12 +35,10 @@ export const useActiveClass = ({
    * get total childs from elementRef.current and update active class
    * when click on child
    */
-  const { childs, removeActiveElements } = useGetChilds({
-    refElement: elementRef,
-    notChild: notChild,
-    events: {
-      click: (e) => { updateActiveClass(e.target.parentElement, elementRef) }
-    }
+  const { childs, removeActiveElements, getChildrenAtDepth } = useGetChilds({
+    refConfig: { elementRef, option: depth },
+    notChild,
+    events
   });
 
   /**
@@ -42,17 +46,29 @@ export const useActiveClass = ({
    * 
    * @param {HTMLElement} targetElement - The element to which the "active" class will be added.
    * @param {import('react').RefObject} elementRef - The reference to the container whose children will be updated.
+   * @param {Array} notChild - List of child elements to exclude from being considered.
+   * @param {boolean} withoutState - A flag to determine whether to update the state or not.
    */
-  const updateActiveClass = (targetElement, elementRef, withoutState = true) => {
-    if (isBad(elementRef?.current)) return
-    Array.from(elementRef?.current.children).forEach((child) => {
-      child?.classList.remove('active');
-    })
-    targetElement?.classList.add('active');
-    const currentIndex = indexOf(elementRef?.current.children, targetElement);
-    if (withoutState) { setChildIndex(currentIndex) }
-  }
+  const updateActiveClass = ({ targetElement = {}, elementRef = {}, withoutState = true }) => {
+    if (isBad(elementRef?.current)) return;
+    if (!targetElement || !targetElement.nodeType) return; // Validación del targetElement
 
+    const childrens = getChildrenAtDepth({ parent: elementRef.current, depth, notChild });
+
+    Array.from(childrens)
+      .filter(child => !notChild.includes(child.id))
+      .forEach((child) => {
+        if (child === targetElement) {
+          child.classList.add('active');
+        } else {
+          child.classList.remove('active');
+        }
+      });
+
+    const currentIndex = Array.from(childrens).findIndex(child => child === targetElement)
+    withoutState && setChildIndex(currentIndex)
+
+  };
   /**
    * 
    * @param {*} index 
@@ -71,18 +87,23 @@ export const useActiveClass = ({
   }, [additionalConfig, childIndex])
 
   useEffect(() => {
-    if (!isFunction(setConfig) || isBad(config)) {
+
+    if (!isFunction(setConfig)) {
       removeActiveElements()
-      setChildIndex(null)
       return
     }
-  }, [childs, elementRef, config, childIndex])
+
+  }, [childs, childIndex])
+
 
   // update child active class from server data about activeindex
   useEffect(() => {
     if (isBad(config, elementRef.current)) return
-    const targetElement = elementRef.current.children[config.activeIndex];
-    updateActiveClass(targetElement, elementRef, false);
+
+    const childrens = getChildrenAtDepth({ parent: elementRef.current, depth, notChild });
+    const targetElement = childrens[config.activeIndex];
+    updateActiveClass({ targetElement, elementRef, notChild, withoutState: false });
   }, [elementRef, config])
 
+  return isFunction(setConfig) && { updateActiveClass };
 };

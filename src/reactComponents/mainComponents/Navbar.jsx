@@ -8,9 +8,10 @@ import { Login } from '../components/Login/Login'
 import { Link } from 'react-router-dom'
 import { GlobalContext } from '../context/GlobalContext'
 import { isBad } from '../../services.js/dataVerify'
+import { isFunction } from '../../services.js/dataVerify'
 
 const Navbar = () => {
-  const { userSession, config, setConfig, changeToThisIndex, menuOptions, currentUrl } = useContext(GlobalContext)
+  const { userSession, config, setConfig, menuOptions, currentUrl } = useContext(GlobalContext)
   const navOptionsRef = useRef(null);
   const [additionalConfig, setAdditionalConfig] = useState(null)
 
@@ -23,18 +24,22 @@ const Navbar = () => {
       config,
       setConfig,
       additionalConfig,
-      changeToThisIndex
     } : {}
     const essentialConfig = {
       elementRef: navOptionsRef,
-      notChild: ['searchButton', 'home'],
+      notChild: ['searchButton'],
     }
     return { ...dependencies, ...essentialConfig }
   }, [additionalConfig, config, navOptionsRef]);
 
-  useActiveClass(options);
+  const { updateActiveClass = () => { } } = useActiveClass(options) || {};
+
+  const handleClick = (e) => {
+    updateActiveClass({ targetElement: e.target.parentElement, elementRef: navOptionsRef, notChild: ['searchButton'] })
+  };
 
   const hasRole = (allowedRoles) => {
+    if (!userSession) return false;
     const userRole = userSession?.user?.role;
     if (!userRole) return false;
     return userRole.split(',').some(role => allowedRoles.includes(role.trim()));
@@ -48,26 +53,37 @@ const Navbar = () => {
             <MenuButton description='☰' />
           </div>
           <div className='navOptions' ref={navOptionsRef}>
-            <Link to={menuOptions?.option0}>
-              <OptionButton id={menuOptions?.option0} description={menuOptions?.option0} />
+
+            <Link to={menuOptions?.option0} id={menuOptions?.option0} onClick={handleClick}>
+              <OptionButton >
+                {menuOptions?.option0} {/* Home */}
+              </OptionButton>
             </Link>
-            <SearchButton description='🔍' />
 
-            {(hasRole(['admin']) && !isBad(userSession)) && (
-              <Link to={menuOptions?.option1}>
-                <OptionButton id={menuOptions?.option1} description={menuOptions?.option1} />
+            <SearchButton description='🔍' id='searchButton' />
+
+
+            {(hasRole(['admin'])) && (
+              <Link to={menuOptions?.option1} id={menuOptions?.option1} onClick={handleClick} >
+                <OptionButton>
+                  {menuOptions?.option1}
+                </OptionButton>
               </Link>
             )}
 
-            {(hasRole(['admin', 'user']) && !isBad(userSession)) && (
-              <Link to={menuOptions?.option2}>
-                <OptionButton id={menuOptions?.option2} description={menuOptions?.option2} />
+            {(hasRole(['admin', 'user'])) && (
+              <Link to={menuOptions?.option2} id={menuOptions?.option2} onClick={handleClick}>
+                <OptionButton >
+                  {menuOptions?.option2}
+                </OptionButton>
               </Link>
             )}
 
-            {(hasRole(['admin']) && !isBad(userSession)) && (
-              <Link to={menuOptions?.option3}>
-                <OptionButton id={menuOptions?.option3} description={menuOptions?.option3} />
+            {(hasRole(['admin'])) && (
+              <Link to={menuOptions?.option3} id={menuOptions?.option3} onClick={handleClick}>
+                <OptionButton>
+                  {menuOptions?.option3}
+                </OptionButton>
               </Link>
             )}
           </div>

@@ -3,19 +3,12 @@ import { isBad } from '../../services.js/dataVerify';
 
 /**
  * Custom hook to get and track the children of a reference element.
- * 
- * This hook returns an array of child elements that updates automatically
- * whenever the child elements of the referenced element change. It also allows
- * for the exclusion of certain child elements and the addition of event listeners.
- * 
- * @param {Object} options - The options to customize the hook.
- * @param {import('react').RefObject} options.refElement - The reference to the parent element whose children will be tracked.
- * @param {Array} [options.notChild=[]] - An array of child element IDs to exclude from the result.
- * @param {Object} [options.events={}] - An object where keys are event names (e.g., 'click') and values are event handlers (functions).
- * 
- * @returns {Array} An array of child elements.
+ * Allows setting event listeners on children up to a specific depth.
  */
-export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) => {
+export const useGetChilds = ({ refConfig = {}, notChild = [], events = {} }) => {
+  const refElement = refConfig?.elementRef;
+  const option = refConfig?.option ?? 1; // Nivel de profundidad, por defecto 1
+
   const [elementState, setElementState] = useState([]);
   const mutationDebounceTimeout = useRef(null);
   const eventHandlersRef = useRef({});
@@ -25,15 +18,12 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
     if (element) {
       Array.from(element.children).forEach(child => {
         if (child.classList.contains('active')) {
-          child.classList.remove('active');  // Eliminar la clase "active"
-          // También podemos eliminar los eventos asociados a estos elementos.
+          child.classList.remove('active');
           Object.entries(events).forEach(([eventType, callback]) => {
-            if (typeof callback === 'function') {
-              const eventHandler = eventHandlersRef.current[`${child.id}-${eventType}`];
-              if (eventHandler) {
-                child.removeEventListener(eventType, eventHandler); // Eliminar el evento
-                delete eventHandlersRef.current[`${child.id}-${eventType}`]; // Limpiar la referencia
-              }
+            const eventHandler = eventHandlersRef.current[`${child.id}-${eventType}`];
+            if (eventHandler) {
+              child.removeEventListener(eventType, eventHandler);
+              delete eventHandlersRef.current[`${child.id}-${eventType}`];
             }
           });
         }
@@ -41,31 +31,51 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
     }
   };
 
+  /**
+   * Get child elements up to a specific depth.
+   * @param {HTMLElement} parent - The parent element.
+   * @param {number} depth - The current depth level.
+   * @param {Array} notChild - Array of child IDs to exclude.
+   * @returns {Array} The list of child elements.
+   */
+  const getChildrenAtDepth = ({ parent, depth = 1, notChild = [] }) => {
+    if (depth === 1) return Array.from(parent.children).filter(child => !notChild.includes(child.id));
+    return Array.from(parent.children)
+      .filter(child => {
+        !notChild.includes(child.id)
+      })
+      .flatMap(child => getChildrenAtDepth({ parent: child, depth: depth - 1, notChild }));
+  };
 
   useEffect(() => {
     const element = refElement?.current;
 
     if (!element || !(element instanceof HTMLElement)) {
       console.log('El elemento no es un nodo DOM', element);
-      removeActiveElements()
+      removeActiveElements();
       return;
     }
 
     /**
-     * Get the list of child elements, excluding the ones in notChild and assigning event listeners if provided.
-     * @returns {Array} List of child elements.
+     * Get the updated list of child elements, filtered and with event listeners added.
+     * @returns {Array} The list of child elements with their metadata.
      */
     const getUpdatedChilds = () => {
-      return Array.from(element.children)
-        .filter(child => {
-          return !notChild.includes(child.id)
-        }) // Excluir hijos
-        .map((child) => {
-          // Asignar eventos si existen
+      const targetChildren = getChildrenAtDepth({ parent: element, depth: option });
+      return targetChildren
+        .filter(child => !notChild.includes(child.id)) // Filtrar elementos no deseados
+        .map(child => {
           if (events && typeof events === 'object') {
             Object.entries(events).forEach(([eventType, callback]) => {
               if (typeof callback === 'function') {
-                child.addEventListener(eventType, callback);
+                // Crear un manejador que detenga la propagación
+                const eventHandler = eventHandlersRef.current[`${child.id}-${eventType}`] ?? ((e) => {
+                  e.stopPropagation(); // Detener la propagación del evento
+                  callback(e);
+                });
+
+                child.addEventListener(eventType, eventHandler);
+                eventHandlersRef.current[`${child.id}-${eventType}`] = eventHandler;
               }
             });
           }
@@ -75,15 +85,12 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
             tagName: child.tagName,
             id: child.id,
             classList: Array.from(child.classList),
-            node: child
+            node: child,
           };
         });
     };
 
-    /**
-     * Callback that triggers when a mutation is detected.
-     * It debounces updates to avoid calling `setElementState` too frequently.
-     */
+
     const observerCallback = () => {
       clearTimeout(mutationDebounceTimeout.current);
       mutationDebounceTimeout.current = setTimeout(() => {
@@ -91,31 +98,25 @@ export const useGetChilds = ({ refElement = null, notChild = [], events = {} }) 
       }, 100);
     };
 
-    // Observer para escuchar los cambios en los hijos del elemento
     const observer = new MutationObserver(observerCallback);
     observer.observe(element, { childList: true, subtree: true });
 
-    // Estado inicial
-    setElementState(() => {
-      if (isBad(refElement)) return [];
-      return getUpdatedChilds();
-    });
+    setElementState(() => (isBad(refElement) ? [] : getUpdatedChilds()));
 
     return () => {
       observer.disconnect();
       clearTimeout(mutationDebounceTimeout.current);
-      // Remover los eventos de los elementos hijos
       Array.from(element.children).forEach(child => {
-        if (events && typeof events === 'object') {
-          Object.entries(events).forEach(([eventType, callback]) => {
-            if (typeof callback === 'function') {
-              child.removeEventListener(eventType, callback);
-            }
-          });
-        }
+        Object.entries(events).forEach(([eventType, callback]) => {
+          const eventHandler = eventHandlersRef.current[`${child.id}-${eventType}`];
+          if (eventHandler) {
+            child.removeEventListener(eventType, eventHandler);
+            delete eventHandlersRef.current[`${child.id}-${eventType}`];
+          }
+        });
       });
     };
-  }, [refElement]);
+  }, [refElement, option]);
 
-  return { childs: elementState, removeActiveElements };
+  return { childs: elementState, removeActiveElements, getChildrenAtDepth };
 };

@@ -8,6 +8,7 @@ export const GlobalContext = createContext()
 export const GlobalContextProvider = ({ children }) => {
 
   const [config, setConfig] = useState({});
+  const [newIndex, setNewIndex] = useState({});
   const [changeToThisIndex, setChangeToThisIndex] = useState({})
 
   const [userSession, setUserSession] = useState({
@@ -43,7 +44,9 @@ export const GlobalContextProvider = ({ children }) => {
     currentUrl,
     setChangeToThisIndex,
     setMenuOptions,
-    deleteSessionData
+    deleteSessionData,
+    newIndex,
+    setNewIndex
   })
 
   useLoginContext({ setUserSession, setIsLoading });
@@ -61,7 +64,9 @@ export const GlobalContextProvider = ({ children }) => {
     setChangeToThisIndex,
     menuOptions,
     setMenuOptions,
-    deleteSessionData
+    deleteSessionData,
+    newIndex,
+    setNewIndex
   }
 
   return (

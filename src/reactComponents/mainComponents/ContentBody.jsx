@@ -9,7 +9,7 @@ export default function ContentBody() {
       <div className="testingTitles">
       </div>
       <div className="mainTitle">
-        <h1>Furry Saviors</h1>
+        <h1>Furry Saviours</h1>
       </div>
     </div>
     <div className="contentBodyContent">

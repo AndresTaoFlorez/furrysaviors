@@ -1,6 +1,7 @@
 $backgroundColor: #2f99b9ad;
 $backgroundColor: #3ec0e783;
 $backgroundColor: #3fa2f6;
+$optionButton_fontColor: rgb(255, 248, 225);
 
 $menu-btn-size: 1.5em;
 
@@ -8,42 +9,32 @@ $menu-btn-size: 1.5em;
 $buttonWidth: fit-content;
 $buttonHeight: fit-content;
 
-.buttonOptionComponent {
-  // <Button>
+.optionButtonComponent {
   display: flex;
-  margin: 0 2px;
-  background: $backgroundColor;
   width: $buttonWidth;
   height: $buttonHeight;
-  pointer-events: all;
-  // justify-content: space-around;
   border-radius: 0 0 5px 5px;
+  padding: 0.25em 0.5em 0.3em;
+  font-size: $menu-btn-size;
+  border: none;
+  background: $backgroundColor;
+  color: $optionButton_fontColor;
   align-items: center;
+  cursor: pointer;
   transition: all 100ms ease-in-out;
-  text-wrap: nowrap;
+  box-sizing: border-box;
 
-  .button {
-    font-size: $menu-btn-size;
-    margin: 8px 10px 4px;
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-    pointer-events: none;
-    user-select: none;
-    transition: all 100ms ease-in-out;
+  a {
+    color: $optionButton_fontColor;
   }
+
   &:hover {
     height: calc($buttonHeight + ($buttonHeight * 0.1));
     width: calc($buttonWidth + 2px);
     background: #3ebfe7;
     border-radius: 0 0 5px 5px;
     cursor: pointer;
-
-    .button {
-      font-size: calc($menu-btn-size + 2px);
-      color: #212121;
-    }
+    font-size: calc($menu-btn-size + 2px);
   }
   &:active {
     scale: 1.02;

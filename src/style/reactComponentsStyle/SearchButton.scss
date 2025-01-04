@@ -1,26 +1,35 @@
-:root {
-  --searchInputHeight: 20px;
-  --searchInputWidth: 200px;
-  --animationDuration: 100ms;
-  --searchButtonIconWidth: 58px; /* Definir el ancho del ícono */
-  --searchButtonIconHeight: 60px; /* Definir la altura del ícono */
-}
+$searchInputHeight: 20px;
+$searchInputWidth: 200px;
+$searchButtonIconHeight: 50px; /* Definir la altura del ícono */
+$searchButtonIconWidth: 58px; /* Definir el ancho del ícono */
+$animationDuration: 200ms;
 
 .searchButton {
   position: relative;
   display: flex;
   justify-content: center;
   // overflow: hidden;
+  .hidden {
+    display: none;
+  }
 
   .searchButtonIcon {
-    animation: openSearchIcon var(--animationDuration);
     width: fit-content;
     height: fit-content;
     will-change: width, height;
+
+    &.noAnimation {
+      animation: none;
+    }
+
+    &.animate {
+      animation: openSearchIcon calc($animationDuration - 100ms);
+    }
   }
   .searchButtonBar {
     display: flex;
     justify-content: center;
+    will-change: width, height;
 
     input.searchInput {
       border: none;
@@ -29,20 +38,21 @@
       border-radius: 0 0 0.5rem 0.5rem;
       background-color: #e8e8e8;
       box-shadow: 0 5px 50px #c5c5c5;
-      animation: openSearchButton var(--animationDuration) forwards;
+      animation: openSearchButton $animationDuration forwards;
       will-change: width, height;
 
       &:focus {
         outline-color: #e8e8e8;
         margin: 0 2px;
         box-shadow: 0 5px 50px #c5c5c5a1, inset 0 5px 50px #ffffff;
-        transition: var(--animationDuration);
+        transition: $animationDuration;
       }
     }
   }
 
   .searchButtonAnimation {
-    animation: openSearchButton var(--animationDuration) reverse forwards;
+    animation: openSearchButton $animationDuration reverse forwards;
+    // interpolate-size: allow-keywords;
   }
 
   // Animation
@@ -53,8 +63,8 @@
       transform: scaleX(0);
     }
     100% {
-      height: var(--searchInputHeight);
-      width: var(--searchInputWidth);
+      height: $searchInputHeight;
+      width: $searchInputWidth;
       transform: scaleX(1);
     }
   }
@@ -64,9 +74,11 @@
   0% {
     height: 0;
     width: 0;
+    transform: scaleX(0);
   }
   100% {
-    width: var(--searchButtonIconWidth);
-    height: var(--searchButtonIconHeight);
+    width: $searchButtonIconWidth;
+    height: $searchButtonIconHeight;
+    transform: scaleX(1);
   }
 }

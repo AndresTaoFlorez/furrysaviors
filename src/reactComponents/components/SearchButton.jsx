@@ -1,32 +1,35 @@
 import '../../style/reactComponentsStyle/SearchButton.scss'
-import { OptionButton } from "./OptionButton"
 import { Modal } from './Modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export function SearchButton({ description }) {
+export function SearchButton({ description, id }) {
   const [toggleLogin, setToggleLogin] = useState({
     clickStatus: false,
     animation: false
   })
 
+  useEffect(() => {
+    document.querySelector(".searchButtonIcon")?.classList.replace("animate", "noAnimation");
+  }, []);
+  
+
   return (
-    <div className='searchButton' id='searchButton'>
+    <div className='searchButton' id={id}>
       {
         !toggleLogin.clickStatus ? (
           <div
-            className='searchButtonIcon'
+            className={`searchButtonIcon animate optionButtonComponent`}
             onClick={() => setToggleLogin(() => ({
               clickStatus: true,
               animation: true
             }))}
           >
-            <OptionButton description={description}></OptionButton>
+            {description}
           </div>
         ) : (
           <Modal
             setToggleLogin={setToggleLogin}
             toggleLogin={toggleLogin}
-            duration={200}
           >
             <div className={`searchButtonBar ${!toggleLogin.animation && 'searchButtonAnimation'}`}>
               <input type="text" className="searchInput" placeholder='Search'

@@ -39,12 +39,21 @@ $primary-color: #19344638;
 
       .navOptions {
         display: flex;
+        position: relative;
+        height: fit-content;
         padding: 0;
         margin-top: 0;
         pointer-events: all;
+        gap: 5px;
+        overflow: hidden;
 
-        .active div {
-          background: #e3d255 !important;
+        .active {
+          background: #e3d255;
+          border-radius: 0 0 5px 5px;
+
+          & > * {
+            background: #e3d255 ;
+          }
         }
 
         li {

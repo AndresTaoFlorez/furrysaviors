@@ -10,12 +10,11 @@ import ProtectedRoutes from './ProtectedRoutes';
 import { isBad } from '../../services.js/dataVerify';
 import { checkSessionService, getCurrentUrl, setUrlFromServer } from '../../services.js/login';
 import { useConfigContext } from '../customHooks/useConfigContext';
-import { isEqual, isEqualWith, update } from 'lodash';
 
 export function Directions() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userSession, isLoading, setIsLoading, menuOptions, currentUrl, setCurrentUrl, setConfig, setUserSession } = useContext(GlobalContext);
+  const { userSession, isLoading, menuOptions, currentUrl, setCurrentUrl, setConfig, setUserSession } = useContext(GlobalContext);
   const { updateAllConfigData } = useConfigContext({ menuOptions, setUserSession, setConfig, navigate })
 
   useEffect(() => {
@@ -34,16 +33,13 @@ export function Directions() {
     if (isBad(userFromServer)) {
       setUrlFromServer({ url: serverUrl })
       navigate(serverUrl)
-      console.log('logged: ', serverUrl);
+      // console.log('logged: ', serverUrl);
       return
     } else {
       if (location.pathname) {
-        // console.log({ currentUrl, pathname: location.pathname });
-        // cuando es null o /home
         if (currentUrl === '/home' || currentUrl === null) {
-          // console.log('to', { pathname: location.pathname });
           navigate(location.pathname)
-          // updateAllConfigData({ newUrl: location.pathname, oldUrl: currentUrl })
+          updateAllConfigData({ newUrl: location.pathname, oldUrl: currentUrl })
         }
       }
     }

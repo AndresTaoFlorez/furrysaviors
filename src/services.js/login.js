@@ -28,13 +28,14 @@ const login = async (email, password, retries = 5, delay = 300) => {
     } catch (error) {
       attempt++;
       if (attempt >= retries) {
-        throw { 
-          message: 'Maximum retries reached. Unable to login.', 
-          res: error, 
-          status: error.response?.status || 500, 
-          email: null, 
-          password: null 
-        };
+        console.log({
+          message: 'Maximum retries reached. Unable to login.',
+          res: error,
+          status: error.response?.status || 500,
+          email: null,
+          password: null
+        });
+        return null;
       }
 
       console.log(`Retrying login... Attempt ${attempt} of ${retries}`);
